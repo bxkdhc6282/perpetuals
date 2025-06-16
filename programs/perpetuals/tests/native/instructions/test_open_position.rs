@@ -59,6 +59,8 @@ pub async fn test_open_position(
             collateral_custody_token_account: custody_token_account_pda,
             system_program: anchor_lang::system_program::ID,
             token_program: anchor_spl::token::ID,
+            custody_twap_account: None, // TODO: add twap account
+            collateral_custody_twap_account: None, // TODO: add twap account
         }
         .to_account_metas(None),
         perpetuals::instruction::OpenPosition { params },

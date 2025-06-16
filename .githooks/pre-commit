@@ -1,13 +1,20 @@
 #!/bin/bash
 
-diff=$(cargo +nightly fmt -- --check)
-result=$?
-
-if [[ ${result} -ne 0 ]] ; then
-    cat <<\EOF
-There are some code style issues, run `cargo +nightly fmt` first.
-EOF
-    exit 1
+if [ -z "$TS_PRECOMMIT_ONLY" ] || [ "$TS_PRECOMMIT_ONLY" = "false" ]; then
+  cargo fmt -- --check
+  cargo clippy -p perpetuals -- -D warnings -D clippy::unwrap_used -D clippy::expect_used -D clippy::panic  
+  cargo clippy -p perpetuals --tests -- -D warnings
+  cargo test --quiet
 fi
 
-exit 0
+# diff=$(cargo +nightly fmt -- --check)
+# result=$?
+
+# if [[ ${result} -ne 0 ]] ; then
+#     cat <<\EOF
+# There are some code style issues, run `cargo +nightly fmt` first.
+# EOF
+#     exit 1
+# fi
+
+# exit 0

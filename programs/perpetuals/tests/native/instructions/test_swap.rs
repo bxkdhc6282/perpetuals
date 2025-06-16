@@ -68,6 +68,8 @@ pub async fn test_swap(
             dispensing_custody_oracle_account: dispensing_custody_oracle_account_address,
             dispensing_custody_token_account: dispensing_custody_token_account_pda,
             token_program: anchor_spl::token::ID,
+            receiving_custody_twap_account: None, // TODO: add twap account
+            dispensing_custody_twap_account: None, // TODO: add twap account
         }
         .to_account_metas(None),
         perpetuals::instruction::Swap { params },

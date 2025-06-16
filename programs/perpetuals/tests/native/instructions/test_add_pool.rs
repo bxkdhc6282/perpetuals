@@ -50,7 +50,7 @@ pub async fn test_add_pool(
                 lp_token_mint: lp_token_mint_pda,
                 system_program: anchor_lang::system_program::ID,
                 token_program: anchor_spl::token::ID,
-                rent: solana_program::sysvar::rent::ID,
+                rent: anchor_lang::solana_program::sysvar::rent::ID,
             };
 
             let mut accounts_meta = accounts.to_account_metas(None);

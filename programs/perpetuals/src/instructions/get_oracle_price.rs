@@ -3,6 +3,7 @@
 use {
     crate::state::{custody::Custody, oracle::OraclePrice, perpetuals::Perpetuals, pool::Pool},
     anchor_lang::prelude::*,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 #[derive(Accounts)]
@@ -28,16 +29,17 @@ pub struct GetOraclePrice<'info> {
     )]
     pub custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the collateral token
-    #[account(
-        constraint = custody_oracle_account.key() == custody.oracle.oracle_account
-    )]
-    pub custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = custody_oracle_account.key() == custody.oracle.oracle_account
+    // )]
+    pub custody_oracle_account: Account<'info, PriceUpdateV2>,
+    pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetOraclePriceParams {
     ema: bool,
+    feed_id: [u8; 32],
 }
 
 pub fn get_oracle_price(
@@ -48,10 +50,12 @@ pub fn get_oracle_price(
     let curtime = ctx.accounts.perpetuals.get_time()?;
 
     let price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         params.ema,
+        params.feed_id,
     )?;
 
     Ok(price

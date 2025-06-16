@@ -1,9 +1,10 @@
 //! Oracle price service handling
 
 use {
-    crate::{error::PerpetualsError, math, state::perpetuals::Perpetuals},
+    crate::{error::PerpetualsError, math, state::perpetuals::Perpetuals, try_from},
     anchor_lang::prelude::*,
     core::cmp::Ordering,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 const ORACLE_EXPONENT_SCALE: i32 = -9;
@@ -94,25 +95,29 @@ impl OraclePrice {
     }
 
     pub fn new_from_oracle(
-        oracle_account: &AccountInfo,
+        price_update: &Account<PriceUpdateV2>,
+        twap_update: Option<&Account<TwapUpdate>>,
         oracle_params: &OracleParams,
         current_time: i64,
         use_ema: bool,
+        feed_id: [u8; 32],
     ) -> Result<Self> {
         match oracle_params.oracle_type {
             OracleType::Custom => Self::get_custom_price(
-                oracle_account,
+                &price_update.to_account_info(),
                 oracle_params.max_price_error,
                 oracle_params.max_price_age_sec,
                 current_time,
                 use_ema,
             ),
             OracleType::Pyth => Self::get_pyth_price(
-                oracle_account,
+                price_update,
+                twap_update,
                 oracle_params.max_price_error,
                 oracle_params.max_price_age_sec,
                 current_time,
                 use_ema,
+                feed_id,
             ),
             _ => err!(PerpetualsError::UnsupportedOracle),
         }
@@ -250,7 +255,7 @@ impl OraclePrice {
             PerpetualsError::InvalidOracleAccount
         );
 
-        let oracle_acc = Account::<CustomOracle>::try_from(custom_price_info)?;
+        let oracle_acc = try_from!(Account<CustomOracle>, custom_price_info)?;
 
         let last_update_age_sec = math::checked_sub(current_time, oracle_acc.publish_time)?;
         if last_update_age_sec > max_price_age_sec as i64 {
@@ -281,44 +286,80 @@ impl OraclePrice {
     }
 
     fn get_pyth_price(
-        pyth_price_info: &AccountInfo,
+        price_update: &Account<PriceUpdateV2>,
+        twap_update: Option<&Account<TwapUpdate>>,
         max_price_error: u64,
         max_price_age_sec: u32,
         current_time: i64,
         use_ema: bool,
+        feed_id: [u8; 32],
     ) -> Result<OraclePrice> {
         require!(
-            !Perpetuals::is_empty_account(pyth_price_info)?,
+            !Perpetuals::is_empty_account(&price_update.to_account_info())?,
             PerpetualsError::InvalidOracleAccount
         );
-        let price_feed = pyth_sdk_solana::load_price_feed_from_account_info(pyth_price_info)
-            .map_err(|_| PerpetualsError::InvalidOracleAccount)?;
-        let pyth_price = if use_ema {
-            price_feed.get_ema_price_unchecked()
-        } else {
-            price_feed.get_price_unchecked()
+
+        let maximum_age: u64 = 30;
+
+        let twap_price = match twap_update {
+            Some(twap) => Some(twap.get_twap_no_older_than(
+                &Clock::get()?,
+                maximum_age,
+                max_price_age_sec as u64,
+                &feed_id,
+            )?),
+            None => None,
         };
 
-        let last_update_age_sec = math::checked_sub(current_time, pyth_price.publish_time)?;
-        if last_update_age_sec > max_price_age_sec as i64 {
-            msg!("Error: Pyth oracle price is stale");
-            return err!(PerpetualsError::StaleOraclePrice);
-        }
+        let price = price_update.get_price_no_older_than(&Clock::get()?, maximum_age, &feed_id)?;
 
-        if pyth_price.price <= 0
+        let final_price = if use_ema {
+            twap_price.ok_or(PerpetualsError::MissingTwap)?.price
+        } else {
+            let publish_time: i64 = price.publish_time;
+
+            let last_update_age_sec = math::checked_sub(current_time, publish_time)?;
+
+            if last_update_age_sec > max_price_age_sec as i64 {
+                msg!("Error: Pyth oracle price is stale");
+                return err!(PerpetualsError::StaleOraclePrice);
+            }
+
+            price.price
+        };
+
+        let final_exponent: i32 = if use_ema {
+            twap_price.ok_or(PerpetualsError::MissingTwap)?.exponent
+        } else {
+            price.exponent
+        };
+
+        let conf_value = if use_ema {
+            twap_price.ok_or(PerpetualsError::MissingTwap)?.conf
+        } else {
+            price.conf
+        };
+
+        if final_price <= 0
             || math::checked_div(
-                math::checked_mul(pyth_price.conf as u128, Perpetuals::BPS_POWER)?,
-                pyth_price.price as u128,
+                math::checked_mul(conf_value as u128, Perpetuals::BPS_POWER)?,
+                final_price as u128,
             )? > max_price_error as u128
         {
             msg!("Error: Pyth oracle price is out of bounds");
             return err!(PerpetualsError::InvalidOraclePrice);
         }
 
+        msg!(
+            "The price is ({} ± {}) * 10^{}",
+            final_price,
+            conf_value,
+            final_exponent
+        );
+
         Ok(OraclePrice {
-            // price is i64 and > 0 per check above
-            price: pyth_price.price as u64,
-            exponent: pyth_price.expo,
+            price: final_price as u64,
+            exponent: final_exponent,
         })
     }
 }

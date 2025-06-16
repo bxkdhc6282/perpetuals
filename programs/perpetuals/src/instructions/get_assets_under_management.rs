@@ -9,6 +9,7 @@ use {
 };
 
 #[derive(Accounts)]
+#[instruction(params: GetAssetsUnderManagementParams)]
 pub struct GetAssetsUnderManagement<'info> {
     #[account(
         seeds = [b"perpetuals"],
@@ -28,7 +29,9 @@ pub struct GetAssetsUnderManagement<'info> {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct GetAssetsUnderManagementParams {}
+pub struct GetAssetsUnderManagementParams {
+    feed_id: [u8; 32],
+}
 
 pub fn get_assets_under_management(
     ctx: Context<GetAssetsUnderManagement>,
@@ -38,5 +41,6 @@ pub fn get_assets_under_management(
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         ctx.accounts.perpetuals.get_time()?,
+        _params.feed_id,
     )
 }

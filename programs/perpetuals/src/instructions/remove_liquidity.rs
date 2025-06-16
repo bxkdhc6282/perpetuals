@@ -11,9 +11,9 @@ use {
             pool::{AumCalcMode, Pool},
         },
     },
-    anchor_lang::prelude::*,
+    anchor_lang::{prelude::*, solana_program::program_error::ProgramError},
     anchor_spl::token::{Mint, Token, TokenAccount},
-    solana_program::program_error::ProgramError,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 #[derive(Accounts)]
@@ -66,11 +66,12 @@ pub struct RemoveLiquidity<'info> {
     )]
     pub custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the returned token
-    #[account(
-        constraint = custody_oracle_account.key() == custody.oracle.oracle_account
-    )]
-    pub custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = custody_oracle_account.key() == custody.oracle.oracle_account
+    // )]
+    pub custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
         mut,
@@ -99,6 +100,7 @@ pub struct RemoveLiquidity<'info> {
 pub struct RemoveLiquidityParams {
     pub lp_amount_in: u64,
     pub min_amount_out: u64,
+    pub feed_id: [u8; 32],
 }
 
 pub fn remove_liquidity(
@@ -129,21 +131,29 @@ pub fn remove_liquidity(
     let curtime = perpetuals.get_time()?;
 
     // Refresh pool.aum_usm to adapt to token price change
-    pool.aum_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::EMA, ctx.remaining_accounts, curtime)?;
+    pool.aum_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::EMA,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     let token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
+        params.feed_id,
     )?;
 
     let max_price = if token_price > token_ema_price {
@@ -152,8 +162,12 @@ pub fn remove_liquidity(
         token_ema_price
     };
 
-    let pool_amount_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::Min, ctx.remaining_accounts, curtime)?;
+    let pool_amount_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::Min,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     // compute amount of tokens to return
     let remove_amount_usd = math::checked_as_u64(math::checked_div(
@@ -231,8 +245,12 @@ pub fn remove_liquidity(
     // update pool stats
     msg!("Update pool stats");
     custody.exit(&crate::ID)?;
-    pool.aum_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::EMA, ctx.remaining_accounts, curtime)?;
+    pool.aum_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::EMA,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     Ok(())
 }

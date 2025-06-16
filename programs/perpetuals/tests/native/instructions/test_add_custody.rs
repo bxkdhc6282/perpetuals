@@ -50,7 +50,7 @@ pub async fn test_add_custody(
                 custody_token_mint: *custody_token_mint,
                 system_program: anchor_lang::system_program::ID,
                 token_program: anchor_spl::token::ID,
-                rent: solana_program::sysvar::rent::ID,
+                rent: anchor_lang::solana_program::sysvar::rent::ID,
             };
 
             let mut accounts_meta = accounts.to_account_metas(None);

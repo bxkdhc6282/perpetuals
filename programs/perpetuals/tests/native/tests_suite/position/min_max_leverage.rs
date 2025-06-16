@@ -106,6 +106,7 @@ pub async fn min_max_leverage() {
             collateral: utils::scale(1, ETH_DECIMALS),
             size: utils::scale(10, ETH_DECIMALS),
             side: Side::Long,
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await
@@ -124,6 +125,7 @@ pub async fn min_max_leverage() {
             collateral: utils::scale(1, ETH_DECIMALS),
             size: utils::scale_f64(0.5, ETH_DECIMALS),
             side: Side::Long,
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await

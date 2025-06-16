@@ -8,8 +8,8 @@ use {
         pool::Pool,
         position::{Position, Side},
     },
-    anchor_lang::prelude::*,
-    solana_program::program_error::ProgramError,
+    anchor_lang::{prelude::*, solana_program::program_error::ProgramError},
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 #[derive(Accounts)]
@@ -35,11 +35,9 @@ pub struct GetEntryPriceAndFee<'info> {
     )]
     pub custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the collateral token
-    #[account(
-        constraint = custody_oracle_account.key() == custody.oracle.oracle_account
-    )]
-    pub custody_oracle_account: AccountInfo<'info>,
+    pub custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
         seeds = [b"custody",
@@ -49,11 +47,12 @@ pub struct GetEntryPriceAndFee<'info> {
     )]
     pub collateral_custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the collateral token
-    #[account(
-        constraint = collateral_custody_oracle_account.key() == collateral_custody.oracle.oracle_account
-    )]
-    pub collateral_custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = collateral_custody_oracle_account.key() == collateral_custody.oracle.oracle_account
+    // )]
+    pub collateral_custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    pub collateral_custody_twap_account: Option<Account<'info, TwapUpdate>>,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -61,6 +60,7 @@ pub struct GetEntryPriceAndFeeParams {
     collateral: u64,
     size: u64,
     side: Side,
+    feed_id: [u8; 32],
 }
 
 pub fn get_entry_price_and_fee(
@@ -79,35 +79,39 @@ pub fn get_entry_price_and_fee(
     let curtime = ctx.accounts.perpetuals.get_time()?;
 
     let token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
+        params.feed_id,
     )?;
 
     let collateral_token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts
-            .collateral_custody_oracle_account
-            .to_account_info(),
-        &collateral_custody.oracle,
+        &ctx.accounts.collateral_custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
+        &custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts
-            .collateral_custody_oracle_account
-            .to_account_info(),
-        &collateral_custody.oracle,
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.collateral_custody_twap_account.as_ref(),
+        &custody.oracle,
         curtime,
-        collateral_custody.pricing.use_ema,
+        false,
+        params.feed_id,
     )?;
 
     let min_collateral_price = collateral_token_price

@@ -1,8 +1,12 @@
 use {
     crate::utils::{self, pda},
-    anchor_lang::{prelude::Pubkey, InstructionData, ToAccountMetas},
-    perpetuals::state::{custody::Custody, pool::Pool},
-    solana_program::instruction::AccountMeta,
+    anchor_lang::{
+        prelude::Pubkey, solana_program::instruction::AccountMeta, InstructionData, ToAccountMetas,
+    },
+    perpetuals::{
+        instructions::UpdatePoolAumParams,
+        state::{custody::Custody, pool::Pool},
+    },
     solana_program_test::{BanksClientError, ProgramTestContext},
     solana_sdk::signer::{keypair::Keypair, Signer},
     tokio::sync::RwLock,
@@ -53,7 +57,10 @@ pub async fn get_update_pool_ix(
     let ix = solana_sdk::instruction::Instruction {
         program_id: perpetuals::id(),
         accounts: accounts_meta,
-        data: perpetuals::instruction::UpdatePoolAum {}.data(),
+        data: perpetuals::instruction::UpdatePoolAum {
+            params: UpdatePoolAumParams { feed_id: [0; 32] },
+        }
+        .data(),
     };
 
     Ok(ix)

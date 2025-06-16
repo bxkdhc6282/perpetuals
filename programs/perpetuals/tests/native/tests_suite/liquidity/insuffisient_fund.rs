@@ -84,7 +84,8 @@ pub async fn insuffisient_fund() {
         usdc_mint,
         AddLiquidityParams {
             amount_in: utils::scale(1_000_000, USDC_DECIMALS),
-            min_lp_amount_out: 1
+            min_lp_amount_out: 1,
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await
@@ -101,6 +102,7 @@ pub async fn insuffisient_fund() {
             AddLiquidityParams {
                 amount_in: utils::scale(15_000, USDC_DECIMALS),
                 min_lp_amount_out: 1,
+                feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await
@@ -115,6 +117,7 @@ pub async fn insuffisient_fund() {
             AddLiquidityParams {
                 amount_in: utils::scale(10, ETH_DECIMALS),
                 min_lp_amount_out: 1,
+                feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await
@@ -137,7 +140,8 @@ pub async fn insuffisient_fund() {
         usdc_mint,
         RemoveLiquidityParams {
             lp_amount_in: alice_lp_token_account_balance + 1,
-            min_amount_out: 1
+            min_amount_out: 1,
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await
@@ -152,7 +156,8 @@ pub async fn insuffisient_fund() {
         usdc_mint,
         RemoveLiquidityParams {
             lp_amount_in: alice_lp_token_account_balance * 75 / 100,
-            min_amount_out: 1
+            min_amount_out: 1,
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await

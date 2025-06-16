@@ -108,6 +108,7 @@ pub async fn max_user_profit() {
             collateral: utils::scale(1, ETH_DECIMALS),
             size: utils::scale(5, ETH_DECIMALS),
             side: Side::Long,
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await
@@ -153,6 +154,7 @@ pub async fn max_user_profit() {
         ClosePositionParams {
             // lowest exit price paid (slippage implied)
             price: utils::scale(2_970, USDC_DECIMALS),
+            feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await

@@ -1,11 +1,10 @@
 use {
     crate::utils::{self, pda},
-    anchor_lang::{prelude::Pubkey, ToAccountMetas},
+    anchor_lang::{prelude::Pubkey, solana_program::instruction::AccountMeta, ToAccountMetas},
     perpetuals::{
         instructions::GetLpTokenPriceParams,
         state::{custody::Custody, pool::Pool},
     },
-    solana_program::instruction::AccountMeta,
     solana_program_test::{BanksClientError, ProgramTestContext},
     solana_sdk::signer::keypair::Keypair,
     tokio::sync::RwLock,
@@ -59,7 +58,9 @@ pub async fn test_get_lp_token_price(
         program_test_ctx,
         accounts_meta,
         perpetuals::instruction::GetLpTokenPrice {
-            params: GetLpTokenPriceParams {},
+            params: GetLpTokenPriceParams {
+                feed_id: [0; 32], // TODO: add feed id
+            },
         },
         payer,
     )

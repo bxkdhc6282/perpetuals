@@ -1,6 +1,12 @@
 use {
     crate::instructions,
-    anchor_lang::{prelude::*, InstructionData},
+    anchor_lang::{
+        prelude::*,
+        solana_program::{
+            clock::DEFAULT_MS_PER_SLOT, epoch_schedule::DEFAULT_SLOTS_PER_EPOCH, program_pack::Pack,
+        },
+        InstructionData,
+    },
     anchor_spl::token::spl_token,
     bonfida_test_utils::ProgramTestContextExt,
     borsh::BorshDeserialize,
@@ -8,9 +14,6 @@ use {
         instructions::SetCustodyConfigParams,
         math,
         state::{custody::Custody, perpetuals::Perpetuals, pool::TokenRatios},
-    },
-    solana_program::{
-        clock::DEFAULT_MS_PER_SLOT, epoch_schedule::DEFAULT_SLOTS_PER_EPOCH, program_pack::Pack,
     },
     solana_program_test::{BanksClientError, ProgramTest, ProgramTestContext},
     solana_sdk::{account, signature::Keypair, signer::Signer, signers::Signers},
@@ -81,7 +84,7 @@ pub async fn get_current_unix_timestamp(program_test_ctx: &RwLock<ProgramTestCon
     let banks_client = &mut ctx.banks_client;
 
     banks_client
-        .get_sysvar::<solana_program::sysvar::clock::Clock>()
+        .get_sysvar::<anchor_lang::solana_program::sysvar::clock::Clock>()
         .await
         .unwrap()
         .unix_timestamp

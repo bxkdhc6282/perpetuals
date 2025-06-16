@@ -66,10 +66,14 @@ pub async fn test_liquidate(
             collateral_custody_oracle_account: custody_oracle_account_address,
             collateral_custody_token_account: custody_token_account_pda,
             token_program: anchor_spl::token::ID,
+            custody_twap_account: None, // TODO: add twap account
+            collateral_custody_twap_account: None, // TODO: add twap account
         }
         .to_account_metas(None),
         perpetuals::instruction::Liquidate {
-            params: LiquidateParams {},
+            params: LiquidateParams {
+                feed_id: [0; 32], // TODO: add feed id
+            },
         },
         Some(&payer.pubkey()),
         &[liquidator, payer],

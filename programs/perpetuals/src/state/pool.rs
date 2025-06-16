@@ -8,8 +8,10 @@ use {
             perpetuals::Perpetuals,
             position::{Position, Side},
         },
+        try_from,
     },
     anchor_lang::prelude::*,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
     std::cmp::Ordering,
 };
 
@@ -711,6 +713,7 @@ impl Pool {
         aum_calc_mode: AumCalcMode,
         accounts: &[AccountInfo],
         curtime: i64,
+        feed_id: [u8; 32],
     ) -> Result<u128> {
         let mut pool_amount_usd: u128 = 0;
         for (idx, &custody) in self.custodies.iter().enumerate() {
@@ -720,22 +723,37 @@ impl Pool {
             }
 
             require_keys_eq!(accounts[idx].key(), custody);
-            let custody = Account::<Custody>::try_from(&accounts[idx])?;
+
+            let custody_info = accounts[idx].to_account_info();
+
+            let custody = try_from!(Account::<Custody>, custody_info)?;
 
             require_keys_eq!(accounts[oracle_idx].key(), custody.oracle.oracle_account);
 
+            let oracle_info = accounts[oracle_idx].to_account_info();
+
+            let oracle_account = try_from!(Account::<PriceUpdateV2>, oracle_info)?;
+
+            let twap_info = accounts[oracle_idx].to_account_info();
+
+            let twap_account = try_from!(Account::<TwapUpdate>, twap_info)?;
+
             let token_price = OraclePrice::new_from_oracle(
-                &accounts[oracle_idx],
+                &oracle_account,
+                Some(&twap_account),
                 &custody.oracle,
                 curtime,
                 false,
+                feed_id,
             )?;
 
             let token_ema_price = OraclePrice::new_from_oracle(
-                &accounts[oracle_idx],
+                &oracle_account,
+                Some(&twap_account),
                 &custody.oracle,
                 curtime,
                 custody.pricing.use_ema,
+                feed_id,
             )?;
 
             let aum_token_price = match aum_calc_mode {

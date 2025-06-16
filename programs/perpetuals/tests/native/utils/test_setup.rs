@@ -4,6 +4,7 @@ use {
         instructions,
         utils::{self, fixtures},
     },
+    anchor_lang::prelude::Pubkey,
     bonfida_test_utils::ProgramTestExt,
     perpetuals::{
         instructions::{AddCustodyParams, AddLiquidityParams, SetCustomOraclePriceParams},
@@ -13,7 +14,6 @@ use {
             pool::TokenRatios,
         },
     },
-    solana_program::pubkey::Pubkey,
     solana_program_test::{ProgramTest, ProgramTestContext},
     solana_sdk::{signature::Keypair, signer::Signer},
     std::collections::HashMap,
@@ -387,6 +387,7 @@ impl TestSetup {
                     AddLiquidityParams {
                         amount_in: custody_param.liquidity_amount,
                         min_lp_amount_out: 1,
+                        feed_id: [0; 32], // TODO: add feed id
                     },
                 )
                 .await

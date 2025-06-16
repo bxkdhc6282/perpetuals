@@ -1,9 +1,11 @@
 //! Perpetuals program entrypoint
 
 #![allow(clippy::result_large_err)]
+#![allow(unexpected_cfgs)]
 
 pub mod error;
 pub mod instructions;
+pub mod macros;
 pub mod math;
 pub mod state;
 
@@ -161,8 +163,11 @@ pub mod perpetuals {
         instructions::liquidate(ctx, &params)
     }
 
-    pub fn update_pool_aum(ctx: Context<UpdatePoolAum>) -> Result<u128> {
-        instructions::update_pool_aum(ctx)
+    pub fn update_pool_aum(
+        ctx: Context<UpdatePoolAum>,
+        params: UpdatePoolAumParams,
+    ) -> Result<u128> {
+        instructions::update_pool_aum(ctx, &params)
     }
 
     pub fn get_add_liquidity_amount_and_fee(

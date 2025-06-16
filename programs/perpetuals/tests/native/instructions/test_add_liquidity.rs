@@ -59,6 +59,7 @@ pub async fn test_add_liquidity(
             custody_token_account: custody_token_account_pda,
             lp_token_mint: lp_token_mint_pda,
             token_program: anchor_spl::token::ID,
+            custody_twap_account: None, // TODO: add twap account
         };
 
         let mut accounts_meta = accounts.to_account_metas(None);

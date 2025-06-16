@@ -58,6 +58,7 @@ pub async fn fixed_fees() {
             AddLiquidityParams {
                 amount_in: utils::scale(1_000, USDC_DECIMALS),
                 min_lp_amount_out: 1,
+                feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await
@@ -100,6 +101,7 @@ pub async fn fixed_fees() {
             RemoveLiquidityParams {
                 lp_amount_in: utils::scale(100, Perpetuals::LP_DECIMALS),
                 min_amount_out: 1,
+                feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await

@@ -11,9 +11,9 @@ use {
             pool::{AumCalcMode, Pool},
         },
     },
-    anchor_lang::prelude::*,
+    anchor_lang::{prelude::*, solana_program::program_error::ProgramError},
     anchor_spl::token::{Mint, Token, TokenAccount},
-    solana_program::program_error::ProgramError,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 #[derive(Accounts)]
@@ -66,11 +66,12 @@ pub struct AddLiquidity<'info> {
     )]
     pub custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the receiving token
-    #[account(
-        constraint = custody_oracle_account.key() == custody.oracle.oracle_account
-    )]
-    pub custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = custody_oracle_account.key() == custody.oracle.oracle_account
+    // )]
+    pub custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
         mut,
@@ -99,6 +100,7 @@ pub struct AddLiquidity<'info> {
 pub struct AddLiquidityParams {
     pub amount_in: u64,
     pub min_lp_amount_out: u64,
+    pub feed_id: [u8; 32],
 }
 
 pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) -> Result<()> {
@@ -125,21 +127,29 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
     let curtime = perpetuals.get_time()?;
 
     // Refresh pool.aum_usm to adapt to token price change
-    pool.aum_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::EMA, ctx.remaining_accounts, curtime)?;
+    pool.aum_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::EMA,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     let token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
+        params.feed_id,
     )?;
 
     let min_price = if token_price < token_ema_price {
@@ -173,8 +183,12 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
 
     // compute assets under management
     msg!("Compute assets under management");
-    let pool_amount_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::Max, ctx.remaining_accounts, curtime)?;
+    let pool_amount_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::Max,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     // compute amount of lp tokens to mint
     let no_fee_amount = math::checked_sub(params.amount_in, fee_amount)?;
@@ -234,8 +248,12 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
     // update pool stats
     msg!("Update pool stats");
     custody.exit(&crate::ID)?;
-    pool.aum_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::EMA, ctx.remaining_accounts, curtime)?;
+    pool.aum_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::EMA,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     Ok(())
 }

@@ -8,7 +8,13 @@ use {
     anchor_lang::prelude::*,
 };
 
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct UpdatePoolAumParams {
+    pub feed_id: [u8; 32],
+}
+
 #[derive(Accounts)]
+#[instruction(params: UpdatePoolAumParams)]
 pub struct UpdatePoolAum<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -31,7 +37,7 @@ pub struct UpdatePoolAum<'info> {
     //   pool.tokens.len() custody oracles (read-only, unsigned)
 }
 
-pub fn update_pool_aum(ctx: Context<UpdatePoolAum>) -> Result<u128> {
+pub fn update_pool_aum(ctx: Context<UpdatePoolAum>, params: &UpdatePoolAumParams) -> Result<u128> {
     let perpetuals: &Account<'_, Perpetuals> = ctx.accounts.perpetuals.as_ref();
     let pool = ctx.accounts.pool.as_mut();
 
@@ -42,8 +48,12 @@ pub fn update_pool_aum(ctx: Context<UpdatePoolAum>) -> Result<u128> {
 
     msg!("Previous value: {}", pool.aum_usd);
 
-    pool.aum_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::EMA, ctx.remaining_accounts, curtime)?;
+    pool.aum_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::EMA,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     msg!("Updated value: {}", pool.aum_usd);
 

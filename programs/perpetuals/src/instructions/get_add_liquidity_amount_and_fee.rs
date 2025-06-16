@@ -10,9 +10,9 @@ use {
             pool::{AumCalcMode, Pool},
         },
     },
-    anchor_lang::prelude::*,
+    anchor_lang::{prelude::*, solana_program::program_error::ProgramError},
     anchor_spl::token::Mint,
-    solana_program::program_error::ProgramError,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 #[derive(Accounts)]
@@ -38,11 +38,12 @@ pub struct GetAddLiquidityAmountAndFee<'info> {
     )]
     pub custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the collateral token
-    #[account(
-        constraint = custody_oracle_account.key() == custody.oracle.oracle_account
-    )]
-    pub custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = custody_oracle_account.key() == custody.oracle.oracle_account
+    // )]
+    pub custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
         seeds = [b"lp_token_mint",
@@ -55,6 +56,7 @@ pub struct GetAddLiquidityAmountAndFee<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetAddLiquidityAmountAndFeeParams {
     amount_in: u64,
+    feed_id: [u8; 32],
 }
 
 pub fn get_add_liquidity_amount_and_fee(
@@ -73,25 +75,33 @@ pub fn get_add_liquidity_amount_and_fee(
     let curtime = ctx.accounts.perpetuals.get_time()?;
 
     let token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account.to_account_info(),
+        &ctx.accounts.custody_oracle_account,
+        ctx.accounts.custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
+        params.feed_id,
     )?;
 
     let fee_amount =
         pool.get_add_liquidity_fee(token_id, params.amount_in, custody, &token_price)?;
     let no_fee_amount = math::checked_sub(params.amount_in, fee_amount)?;
 
-    let pool_amount_usd =
-        pool.get_assets_under_management_usd(AumCalcMode::Max, ctx.remaining_accounts, curtime)?;
+    let pool_amount_usd = pool.get_assets_under_management_usd(
+        AumCalcMode::Max,
+        ctx.remaining_accounts,
+        curtime,
+        params.feed_id,
+    )?;
 
     let min_price = if token_price < token_ema_price {
         token_price

@@ -1,8 +1,10 @@
 use {
     crate::utils::{self, pda},
-    anchor_lang::{prelude::Pubkey, ToAccountMetas},
-    perpetuals::state::{custody::Custody, pool::Pool},
-    solana_program::instruction::AccountMeta,
+    anchor_lang::{prelude::Pubkey, solana_program::instruction::AccountMeta, ToAccountMetas},
+    perpetuals::{
+        instructions::UpdatePoolAumParams,
+        state::{custody::Custody, pool::Pool},
+    },
     solana_program_test::{BanksClientError, ProgramTestContext},
     solana_sdk::signer::{keypair::Keypair, Signer},
     tokio::sync::RwLock,
@@ -55,7 +57,11 @@ pub async fn test_update_pool_aum(
     utils::create_and_execute_perpetuals_ix(
         program_test_ctx,
         accounts_meta,
-        perpetuals::instruction::UpdatePoolAum {},
+        perpetuals::instruction::UpdatePoolAum {
+            params: UpdatePoolAumParams {
+                feed_id: [0; 32], // TODO: add feed id
+            },
+        },
         Some(&payer.pubkey()),
         &[payer],
         None,

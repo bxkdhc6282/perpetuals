@@ -2,19 +2,27 @@ pub mod instructions;
 pub mod tests_suite;
 pub mod utils;
 
+use tests_suite::{
+    basic_interactions::basic_interactions,
+    liquidity::{fixed_fees, insuffisient_fund as liquidity_insuffisient_fund, min_max_ratio},
+    lp_token::lp_token_price,
+    position::{liquidate_position, max_user_profit, min_max_leverage},
+    swap::insuffisient_fund as swap_insuffisient_fund,
+};
+
 #[tokio::test]
 pub async fn test_integration() {
-    tests_suite::basic_interactions().await;
+    basic_interactions().await;
 
-    tests_suite::swap::insuffisient_fund().await;
+    swap_insuffisient_fund().await;
 
-    tests_suite::liquidity::fixed_fees().await;
-    tests_suite::liquidity::insuffisient_fund().await;
-    tests_suite::liquidity::min_max_ratio().await;
+    fixed_fees().await;
+    liquidity_insuffisient_fund().await;
+    min_max_ratio().await;
 
-    tests_suite::position::min_max_leverage().await;
-    tests_suite::position::liquidate_position().await;
-    tests_suite::position::max_user_profit().await;
+    min_max_leverage().await;
+    liquidate_position().await;
+    max_user_profit().await;
 
-    tests_suite::lp_token::lp_token_price().await;
+    lp_token_price().await;
 }

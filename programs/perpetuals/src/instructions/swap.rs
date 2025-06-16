@@ -6,9 +6,9 @@ use {
         math,
         state::{custody::Custody, oracle::OraclePrice, perpetuals::Perpetuals, pool::Pool},
     },
-    anchor_lang::prelude::*,
+    anchor_lang::{prelude::*, solana_program::program_error::ProgramError},
     anchor_spl::token::{Token, TokenAccount},
-    solana_program::program_error::ProgramError,
+    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
 };
 
 #[derive(Accounts)]
@@ -61,12 +61,16 @@ pub struct Swap<'info> {
     )]
     pub receiving_custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the received token
-    #[account(
-        constraint = receiving_custody_oracle_account.key() == receiving_custody.oracle.oracle_account
-    )]
-    pub receiving_custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = receiving_custody_oracle_account.key() == receiving_custody.oracle.oracle_account
+    // )]
+    pub receiving_custody_oracle_account: Account<'info, PriceUpdateV2>,
 
+    pub receiving_custody_twap_account: Option<Account<'info, TwapUpdate>>,
+
+    // pub custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    // pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
     #[account(
         mut,
         seeds = [b"custody_token_account",
@@ -85,11 +89,12 @@ pub struct Swap<'info> {
     )]
     pub dispensing_custody: Box<Account<'info, Custody>>,
 
-    /// CHECK: oracle account for the returned token
-    #[account(
-        constraint = dispensing_custody_oracle_account.key() == dispensing_custody.oracle.oracle_account
-    )]
-    pub dispensing_custody_oracle_account: AccountInfo<'info>,
+    // #[account(
+    //     constraint = dispensing_custody_oracle_account.key() == dispensing_custody.oracle.oracle_account
+    // )]
+    pub dispensing_custody_oracle_account: Account<'info, PriceUpdateV2>,
+
+    pub dispensing_custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
         mut,
@@ -107,6 +112,7 @@ pub struct Swap<'info> {
 pub struct SwapParams {
     pub amount_in: u64,
     pub min_amount_out: u64,
+    pub feed_id: [u8; 32],
 }
 
 pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
@@ -138,39 +144,39 @@ pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
     let token_id_out = pool.get_token_id(&dispensing_custody.key())?;
 
     let received_token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts
-            .receiving_custody_oracle_account
-            .to_account_info(),
+        &ctx.accounts.receiving_custody_oracle_account,
+        ctx.accounts.receiving_custody_twap_account.as_ref(),
         &receiving_custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let received_token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts
-            .receiving_custody_oracle_account
-            .to_account_info(),
+        &ctx.accounts.receiving_custody_oracle_account,
+        ctx.accounts.receiving_custody_twap_account.as_ref(),
         &receiving_custody.oracle,
         curtime,
         receiving_custody.pricing.use_ema,
+        params.feed_id,
     )?;
 
     let dispensed_token_price = OraclePrice::new_from_oracle(
-        &ctx.accounts
-            .dispensing_custody_oracle_account
-            .to_account_info(),
+        &ctx.accounts.dispensing_custody_oracle_account,
+        ctx.accounts.dispensing_custody_twap_account.as_ref(),
         &dispensing_custody.oracle,
         curtime,
         false,
+        params.feed_id,
     )?;
 
     let dispensed_token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts
-            .dispensing_custody_oracle_account
-            .to_account_info(),
+        &ctx.accounts.dispensing_custody_oracle_account,
+        ctx.accounts.dispensing_custody_twap_account.as_ref(),
         &dispensing_custody.oracle,
         curtime,
-        dispensing_custody.pricing.use_ema,
+        false,
+        params.feed_id,
     )?;
 
     msg!("Compute swap amount");

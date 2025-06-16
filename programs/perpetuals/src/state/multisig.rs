@@ -2,14 +2,14 @@
 
 use {
     crate::{error::PerpetualsError, math},
-    ahash::AHasher,
-    anchor_lang::prelude::*,
-    std::hash::Hasher,
+    // ahash::AHasher,
+    anchor_lang::{prelude::*, solana_program::hash::hashv},
+    // std::hash::Hasher,
 };
 
 #[repr(C, packed)]
 #[account(zero_copy)]
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Multisig {
     pub num_signers: u8,
     pub num_signed: u8,
@@ -42,25 +42,25 @@ impl Multisig {
     pub const MAX_SIGNERS: usize = 6;
     pub const LEN: usize = 8 + std::mem::size_of::<Multisig>();
 
-    /// Returns instruction accounts and data hash.
-    /// Hash is not cryptographic and is meant to perform a fast check that admins are signing
-    /// the same instruction.
     pub fn get_instruction_hash(
         instruction_accounts: &[AccountInfo],
         instruction_data: &[u8],
-    ) -> u64 {
-        let mut hasher = AHasher::new_with_keys(697533735114380, 537268678243635);
+    ) -> [u8; 32] {
+        let mut data_to_hash = Vec::new();
+
         for account in instruction_accounts {
-            hasher.write(account.key.as_ref());
+            data_to_hash.extend_from_slice(account.key.as_ref());
         }
+
         if !instruction_data.is_empty() {
-            hasher.write(instruction_data);
+            data_to_hash.extend_from_slice(instruction_data);
         }
-        hasher.finish()
+
+        hashv(&[&data_to_hash]).to_bytes()
     }
 
     /// Returns all accounts for the given context
-    pub fn get_account_infos<'info, T: ToAccountInfos<'info>>(
+    pub fn get_account_infos<'info, T: ToAccountInfos<'info> + anchor_lang::Bumps>(
         ctx: &Context<'_, '_, '_, 'info, T>,
     ) -> Vec<AccountInfo<'info>> {
         let mut infos = ctx.accounts.to_account_infos();
@@ -156,15 +156,23 @@ impl Multisig {
 
         let instruction_hash =
             Multisig::get_instruction_hash(instruction_accounts, instruction_data);
-        if instruction_hash != self.instruction_hash
+        if instruction_hash[..] != self.instruction_hash.to_le_bytes()
             || instruction_accounts.len() != self.instruction_accounts_len as usize
             || instruction_data.len() != self.instruction_data_len as usize
         {
+            let bytes: [u8; 8] = instruction_hash
+                .get(..8)
+                .ok_or(PerpetualsError::InvalidInstructionHash)?
+                .try_into()
+                .map_err(|_| PerpetualsError::InvalidInstructionHash)?;
+
             // if this is a new instruction reset the data
             self.num_signed = 1;
             self.instruction_accounts_len = instruction_accounts.len() as u8;
             self.instruction_data_len = instruction_data.len() as u16;
-            self.instruction_hash = instruction_hash;
+            // self.instruction_hash = instruction_hash;
+
+            self.instruction_hash = u64::from_le_bytes(bytes);
             self.signed.fill(0);
             self.signed[signer_idx] = 1;
             //multisig.pack(*multisig_account.try_borrow_mut_data()?)?;
