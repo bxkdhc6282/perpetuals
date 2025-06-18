@@ -2,11 +2,11 @@
 // single deploy script that's invoked from the CLI, injecting a provider
 // configured from the workspace's Anchor.toml.
 
-const anchor = require("@coral-xyz/anchor");
+import anchor from "@coral-xyz/anchor";
 
-module.exports = async function (provider) {
+export default async function (provider: anchor.AnchorProvider) {
   // Configure client to use the provider.
   anchor.setProvider(provider);
 
   // Add your deploy script here.
-};
+}
