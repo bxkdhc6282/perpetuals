@@ -112,7 +112,7 @@ pub struct Swap<'info> {
 pub struct SwapParams {
     pub amount_in: u64,
     pub min_amount_out: u64,
-    pub feed_id: [u8; 32],
+    // pub feed_id: [u8; 32],
 }
 
 pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
@@ -149,7 +149,7 @@ pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
         &receiving_custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        receiving_custody.oracle.feed_id,
     )?;
 
     let received_token_ema_price = OraclePrice::new_from_oracle(
@@ -158,7 +158,7 @@ pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
         &receiving_custody.oracle,
         curtime,
         receiving_custody.pricing.use_ema,
-        params.feed_id,
+        receiving_custody.oracle.feed_id,
     )?;
 
     let dispensed_token_price = OraclePrice::new_from_oracle(
@@ -167,7 +167,7 @@ pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
         &dispensing_custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        dispensing_custody.oracle.feed_id,
     )?;
 
     let dispensed_token_ema_price = OraclePrice::new_from_oracle(
@@ -176,7 +176,7 @@ pub fn swap(ctx: Context<Swap>, params: &SwapParams) -> Result<()> {
         &dispensing_custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        dispensing_custody.oracle.feed_id,
     )?;
 
     msg!("Compute swap amount");

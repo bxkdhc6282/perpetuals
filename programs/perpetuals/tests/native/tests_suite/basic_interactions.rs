@@ -112,7 +112,9 @@ pub async fn basic_interactions() {
                 collateral: utils::scale_f64(0.1, ETH_DECIMALS),
                 size: utils::scale_f64(0.1, ETH_DECIMALS),
                 side: Side::Long,
-                feed_id: [0; 32], // TODO: add feed id
+                take_profit_price: None,
+                stop_loss_price: None,
+                // feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await
@@ -130,7 +132,7 @@ pub async fn basic_interactions() {
             ClosePositionParams {
                 // lowest exit price paid (slippage implied)
                 price: utils::scale(1_450, USDC_DECIMALS),
-                feed_id: [0; 32], // TODO: add feed id
+                // feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await
@@ -161,7 +163,7 @@ pub async fn basic_interactions() {
                 SwapParams {
                     amount_in: utils::scale(150, USDC_DECIMALS),
                     min_amount_out: utils::scale_f64(0.09, ETH_DECIMALS),
-                    feed_id: [0; 32], // TODO: add feed id
+                    // feed_id: [0; 32], // TODO: add feed id
                 },
             )
             .await
@@ -196,7 +198,7 @@ pub async fn basic_interactions() {
                 SwapParams {
                     amount_in: utils::scale_f64(0.1, ETH_DECIMALS),
                     min_amount_out: utils::scale(140, USDC_DECIMALS),
-                    feed_id: [0; 32], // TODO: add feed id
+                    // feed_id: [0; 32], // TODO: add feed id
                 },
             )
             .await
@@ -231,7 +233,7 @@ pub async fn basic_interactions() {
             RemoveLiquidityParams {
                 lp_amount_in: alice_lp_token_balance,
                 min_amount_out: 1,
-                feed_id: [0; 32], // TODO: add feed id
+                // feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await

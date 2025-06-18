@@ -114,7 +114,9 @@ pub async fn liquidate_position() {
             collateral: utils::scale(1, ETH_DECIMALS),
             size: utils::scale(5, ETH_DECIMALS),
             side: Side::Long,
-            feed_id: [0; 32], // TODO: add feed id
+            take_profit_price: None,
+            stop_loss_price: None,
+            // feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await

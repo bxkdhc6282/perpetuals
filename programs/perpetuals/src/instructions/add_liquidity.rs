@@ -100,7 +100,7 @@ pub struct AddLiquidity<'info> {
 pub struct AddLiquidityParams {
     pub amount_in: u64,
     pub min_lp_amount_out: u64,
-    pub feed_id: [u8; 32],
+    // pub feed_id: [u8; 32],
 }
 
 pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) -> Result<()> {
@@ -131,7 +131,7 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // custody.oracle.feed_id,
     )?;
 
     let token_price = OraclePrice::new_from_oracle(
@@ -140,7 +140,7 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -149,7 +149,7 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let min_price = if token_price < token_ema_price {
@@ -187,7 +187,7 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
         AumCalcMode::Max,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // custody.oracle.feed_id,
     )?;
 
     // compute amount of lp tokens to mint
@@ -252,7 +252,7 @@ pub fn add_liquidity(ctx: Context<AddLiquidity>, params: &AddLiquidityParams) ->
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // custody.oracle.feed_id,
     )?;
 
     Ok(())

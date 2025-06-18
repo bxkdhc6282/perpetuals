@@ -38,6 +38,7 @@ pub struct OracleParams {
     pub oracle_authority: Pubkey,
     pub max_price_error: u64,
     pub max_price_age_sec: u32,
+    pub feed_id: [u8; 32],
 }
 
 #[account]

@@ -84,7 +84,7 @@ pub async fn min_max_ratio() {
         AddLiquidityParams {
             amount_in: utils::scale(1_000, USDC_DECIMALS),
             min_lp_amount_out: 1,
-            feed_id: [0; 32], // TODO: add feed id
+            // feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await
@@ -108,7 +108,7 @@ pub async fn min_max_ratio() {
         RemoveLiquidityParams {
             lp_amount_in: alice_lp_token_account_balance * 35 / 100,
             min_amount_out: 1,
-            feed_id: [0; 32], // TODO: add feed id
+            // feed_id: [0; 32], // TODO: add feed id
         },
     )
     .await

@@ -56,7 +56,7 @@ pub struct GetAddLiquidityAmountAndFee<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetAddLiquidityAmountAndFeeParams {
     amount_in: u64,
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn get_add_liquidity_amount_and_fee(
@@ -80,7 +80,7 @@ pub fn get_add_liquidity_amount_and_fee(
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -89,7 +89,7 @@ pub fn get_add_liquidity_amount_and_fee(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let fee_amount =
@@ -100,7 +100,7 @@ pub fn get_add_liquidity_amount_and_fee(
         AumCalcMode::Max,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // custody.oracle.feed_id,
     )?;
 
     let min_price = if token_price < token_ema_price {

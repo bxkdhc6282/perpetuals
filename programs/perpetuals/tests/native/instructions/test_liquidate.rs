@@ -72,7 +72,7 @@ pub async fn test_liquidate(
         .to_account_metas(None),
         perpetuals::instruction::Liquidate {
             params: LiquidateParams {
-                feed_id: [0; 32], // TODO: add feed id
+                // feed_id: [0; 32], // TODO: add feed id
             },
         },
         Some(&payer.pubkey()),

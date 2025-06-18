@@ -1,0 +1,58 @@
+{
+  "assets": [
+    {
+      "type": "Crypto",
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "isStable": false,
+      "mint": "So11111111111111111111111111111111111111112",
+      "feedId": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "imageUrl": "https://raw.githubusercontent.com/ibold-dev/Cryptocurrency_Logos/refs/heads/mainx/SVG/btc.svg"
+    },
+    {
+      "type": "Crypto",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "isStable": false,
+      "mint": "So11111111111111111111111111111111111111112",
+      "feedId": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "imageUrl": "https://raw.githubusercontent.com/ibold-dev/Cryptocurrency_Logos/refs/heads/mainx/SVG/btc.svg"
+    },
+    {
+      "type": "Crypto",
+      "name": "Solana",
+      "symbol": "SOL",
+      "isStable": false,
+      "mint": "So11111111111111111111111111111111111111112",
+      "feedId": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "imageUrl": "https://raw.githubusercontent.com/ibold-dev/Cryptocurrency_Logos/refs/heads/mainx/SVG/btc.svg"
+    },
+    {
+      "type": "Crypto",
+      "name": "Hype",
+      "symbol": "HYPE",
+      "isStable": false,
+      "mint": "So11111111111111111111111111111111111111112",
+      "feedId": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "imageUrl": "https://raw.githubusercontent.com/ibold-dev/Cryptocurrency_Logos/refs/heads/mainx/SVG/btc.svg"
+    },
+    {
+      "type": "Crypto",
+      "name": "kPEPE",
+      "symbol": "kPEPE",
+      "isStable": false,
+      "mint": "So11111111111111111111111111111111111111112",
+      "feedId": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "imageUrl": "https://raw.githubusercontent.com/ibold-dev/Cryptocurrency_Logos/refs/heads/mainx/SVG/btc.svg"
+    },
+    {
+      "type": "Crypto",
+      "name": "Sui",
+      "symbol": "SUI",
+      "isStable": false,
+      "mint": "So11111111111111111111111111111111111111112",
+      "feedId": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "imageUrl": "https://raw.githubusercontent.com/ibold-dev/Cryptocurrency_Logos/refs/heads/mainx/SVG/btc.svg"
+    }
+  ]
+}

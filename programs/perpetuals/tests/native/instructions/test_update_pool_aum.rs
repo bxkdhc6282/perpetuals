@@ -2,7 +2,7 @@ use {
     crate::utils::{self, pda},
     anchor_lang::{prelude::Pubkey, solana_program::instruction::AccountMeta, ToAccountMetas},
     perpetuals::{
-        instructions::UpdatePoolAumParams,
+        // instructions::UpdatePoolAumParams,
         state::{custody::Custody, pool::Pool},
     },
     solana_program_test::{BanksClientError, ProgramTestContext},
@@ -58,9 +58,9 @@ pub async fn test_update_pool_aum(
         program_test_ctx,
         accounts_meta,
         perpetuals::instruction::UpdatePoolAum {
-            params: UpdatePoolAumParams {
-                feed_id: [0; 32], // TODO: add feed id
-            },
+            // params: UpdatePoolAumParams {
+            //     feed_id: [0; 32], // TODO: add feed id
+            // },
         },
         Some(&payer.pubkey()),
         &[payer],

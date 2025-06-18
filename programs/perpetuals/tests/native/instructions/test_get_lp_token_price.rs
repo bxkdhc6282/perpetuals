@@ -59,7 +59,7 @@ pub async fn test_get_lp_token_price(
         accounts_meta,
         perpetuals::instruction::GetLpTokenPrice {
             params: GetLpTokenPriceParams {
-                feed_id: [0; 32], // TODO: add feed id
+                // feed_id: [0; 32], // TODO: add feed id
             },
         },
         payer,

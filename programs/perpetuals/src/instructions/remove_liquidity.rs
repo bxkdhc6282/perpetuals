@@ -100,7 +100,7 @@ pub struct RemoveLiquidity<'info> {
 pub struct RemoveLiquidityParams {
     pub lp_amount_in: u64,
     pub min_amount_out: u64,
-    pub feed_id: [u8; 32],
+    // pub feed_id: [u8; 32],
 }
 
 pub fn remove_liquidity(
@@ -135,7 +135,7 @@ pub fn remove_liquidity(
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // params.feed_id,
     )?;
 
     let token_price = OraclePrice::new_from_oracle(
@@ -144,7 +144,7 @@ pub fn remove_liquidity(
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -153,7 +153,7 @@ pub fn remove_liquidity(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let max_price = if token_price > token_ema_price {
@@ -166,7 +166,7 @@ pub fn remove_liquidity(
         AumCalcMode::Min,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // params.feed_id,
     )?;
 
     // compute amount of tokens to return
@@ -249,7 +249,7 @@ pub fn remove_liquidity(
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // params.feed_id,
     )?;
 
     Ok(())
