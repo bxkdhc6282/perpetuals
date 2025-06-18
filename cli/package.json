@@ -1,0 +1,45 @@
+{
+  "name": "@algelabs/cli",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "alge": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "clean": "rimraf dist",
+    "prebuild": "yarn clean",
+    "prepare": "yarn build",
+    "test": "jest",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "author": "Alge Labs",
+  "license": "ISC",
+  "description": "CLI for Alge Labs Perpetuals Protocol",
+  "dependencies": {
+    "@algelabs/sdk": "file:../sdk",
+    "chalk": "^5.0.0",
+    "commander": "^11.0.0",
+    "conf": "^10.0.0",
+    "inquirer": "^9.2.0",
+    "keytar": "^7.9.0",
+    "ora": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.0",
+    "@types/keytar": "^4.4.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.0"
+  }
+}

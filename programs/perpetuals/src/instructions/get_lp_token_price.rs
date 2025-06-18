@@ -41,7 +41,7 @@ pub struct GetLpTokenPrice<'info> {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetLpTokenPriceParams {
-    pub feed_id: [u8; 32],
+    // pub feed_id: [u8; 32],
 }
 
 pub fn get_lp_token_price(
@@ -52,7 +52,7 @@ pub fn get_lp_token_price(
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         ctx.accounts.perpetuals.get_time()?,
-        _params.feed_id,
+        // _params.feed_id,
     )?)?;
 
     msg!("aum_usd: {}", aum_usd);

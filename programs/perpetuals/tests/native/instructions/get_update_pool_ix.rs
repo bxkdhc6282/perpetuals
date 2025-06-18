@@ -4,7 +4,7 @@ use {
         prelude::Pubkey, solana_program::instruction::AccountMeta, InstructionData, ToAccountMetas,
     },
     perpetuals::{
-        instructions::UpdatePoolAumParams,
+        // instructions::UpdatePoolAumParams,
         state::{custody::Custody, pool::Pool},
     },
     solana_program_test::{BanksClientError, ProgramTestContext},
@@ -58,7 +58,7 @@ pub async fn get_update_pool_ix(
         program_id: perpetuals::id(),
         accounts: accounts_meta,
         data: perpetuals::instruction::UpdatePoolAum {
-            params: UpdatePoolAumParams { feed_id: [0; 32] },
+            // params: UpdatePoolAumParams { feed_id: [0; 32] },
         }
         .data(),
     };

@@ -387,7 +387,7 @@ impl TestSetup {
                     AddLiquidityParams {
                         amount_in: custody_param.liquidity_amount,
                         min_lp_amount_out: 1,
-                        feed_id: [0; 32], // TODO: add feed id
+                        // feed_id: [0; 32], // TODO: add feed id
                     },
                 )
                 .await

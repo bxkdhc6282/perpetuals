@@ -58,7 +58,7 @@ pub struct GetSwapAmountAndFees<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetSwapAmountAndFeesParams {
     amount_in: u64,
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn get_swap_amount_and_fees(
@@ -89,7 +89,7 @@ pub fn get_swap_amount_and_fees(
         &receiving_custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        receiving_custody.oracle.feed_id,
     )?;
 
     let received_token_ema_price = OraclePrice::new_from_oracle(
@@ -98,7 +98,7 @@ pub fn get_swap_amount_and_fees(
         &receiving_custody.oracle,
         curtime,
         receiving_custody.pricing.use_ema,
-        params.feed_id,
+        receiving_custody.oracle.feed_id,
     )?;
 
     let dispensed_token_price = OraclePrice::new_from_oracle(
@@ -107,7 +107,7 @@ pub fn get_swap_amount_and_fees(
         &dispensing_custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        dispensing_custody.oracle.feed_id,
     )?;
 
     let dispensed_token_ema_price = OraclePrice::new_from_oracle(
@@ -116,7 +116,7 @@ pub fn get_swap_amount_and_fees(
         &dispensing_custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        dispensing_custody.oracle.feed_id,
     )?;
 
     let amount_out = pool.get_swap_amount(

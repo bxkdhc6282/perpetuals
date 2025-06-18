@@ -68,7 +68,7 @@ pub struct GetExitPriceAndFee<'info> {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetExitPriceAndFeeParams {
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn get_exit_price_and_fee(
@@ -88,7 +88,7 @@ pub fn get_exit_price_and_fee(
         &custody.oracle,
         curtime,
         false,
-        _params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -97,7 +97,7 @@ pub fn get_exit_price_and_fee(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        _params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
@@ -106,7 +106,7 @@ pub fn get_exit_price_and_fee(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        _params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let price = pool.get_exit_price(&token_price, &token_ema_price, position.side, custody)?;

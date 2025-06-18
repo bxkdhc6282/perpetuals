@@ -96,7 +96,7 @@ pub struct RemoveCollateral<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct RemoveCollateralParams {
     collateral_usd: u64,
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn remove_collateral(
@@ -131,7 +131,7 @@ pub fn remove_collateral(
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -140,16 +140,16 @@ pub fn remove_collateral(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let collateral_token_price = OraclePrice::new_from_oracle(
         &ctx.accounts.collateral_custody_oracle_account,
-        ctx.accounts.custody_twap_account.as_ref(),
+        ctx.accounts.collateral_custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
@@ -158,7 +158,7 @@ pub fn remove_collateral(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let max_collateral_price = if collateral_token_price > collateral_token_ema_price {

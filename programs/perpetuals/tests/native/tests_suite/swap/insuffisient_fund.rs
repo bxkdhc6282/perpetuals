@@ -97,7 +97,7 @@ pub async fn insuffisient_fund() {
             SwapParams {
                 amount_in: utils::scale(5_000, USDC_DECIMALS),
                 min_amount_out: 0,
-                feed_id: [0; 32], // TODO: add feed id
+                // feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await
@@ -118,7 +118,7 @@ pub async fn insuffisient_fund() {
             SwapParams {
                 amount_in: utils::scale(10, ETH_DECIMALS),
                 min_amount_out: 0,
-                feed_id: [0; 32], // TODO: add feed id
+                // feed_id: [0; 32], // TODO: add feed id
             },
         )
         .await

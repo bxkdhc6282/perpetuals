@@ -110,7 +110,8 @@ pub struct OpenPositionParams {
     pub collateral: u64,
     pub size: u64,
     pub side: Side,
-    pub feed_id: [u8; 32],
+    pub take_profit_price: Option<u64>,
+    pub stop_loss_price: Option<u64>,
 }
 
 pub fn open_position(ctx: Context<OpenPosition>, params: &OpenPositionParams) -> Result<()> {
@@ -154,7 +155,7 @@ pub fn open_position(ctx: Context<OpenPosition>, params: &OpenPositionParams) ->
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -163,16 +164,16 @@ pub fn open_position(ctx: Context<OpenPosition>, params: &OpenPositionParams) ->
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let collateral_token_price = OraclePrice::new_from_oracle(
         &ctx.accounts.collateral_custody_oracle_account,
-        ctx.accounts.custody_twap_account.as_ref(),
+        ctx.accounts.collateral_custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
@@ -181,7 +182,7 @@ pub fn open_position(ctx: Context<OpenPosition>, params: &OpenPositionParams) ->
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let min_collateral_price = collateral_token_price
@@ -275,6 +276,8 @@ pub fn open_position(ctx: Context<OpenPosition>, params: &OpenPositionParams) ->
     position.locked_amount = locked_amount;
     position.collateral_amount = params.collateral;
     position.bump = ctx.bumps.position;
+    position.take_profit_price = params.take_profit_price;
+    position.stop_loss_price = params.stop_loss_price;
 
     // check position risk
     msg!("Check position risks");

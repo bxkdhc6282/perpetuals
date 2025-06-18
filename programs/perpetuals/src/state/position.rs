@@ -50,6 +50,9 @@ pub struct Position {
     pub locked_amount: u64,
     pub collateral_amount: u64,
 
+    pub take_profit_price: Option<u64>, // new
+    pub stop_loss_price: Option<u64>,   // new
+
     pub bump: u8,
 }
 

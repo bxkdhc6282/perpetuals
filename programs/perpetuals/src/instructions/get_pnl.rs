@@ -65,7 +65,7 @@ pub struct GetPnl<'info> {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetPnlParams {
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn get_pnl(ctx: Context<GetPnl>, _params: &GetPnlParams) -> Result<ProfitAndLoss> {
@@ -82,7 +82,7 @@ pub fn get_pnl(ctx: Context<GetPnl>, _params: &GetPnlParams) -> Result<ProfitAnd
         &custody.oracle,
         curtime,
         false,
-        _params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -91,16 +91,16 @@ pub fn get_pnl(ctx: Context<GetPnl>, _params: &GetPnlParams) -> Result<ProfitAnd
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        _params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let collateral_token_price = OraclePrice::new_from_oracle(
         &ctx.accounts.collateral_custody_oracle_account,
-        ctx.accounts.custody_twap_account.as_ref(),
+        ctx.accounts.collateral_custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
-        _params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
@@ -109,7 +109,7 @@ pub fn get_pnl(ctx: Context<GetPnl>, _params: &GetPnlParams) -> Result<ProfitAnd
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        _params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     // compute pnl

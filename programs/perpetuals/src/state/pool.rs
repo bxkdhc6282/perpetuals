@@ -713,7 +713,7 @@ impl Pool {
         aum_calc_mode: AumCalcMode,
         accounts: &[AccountInfo],
         curtime: i64,
-        feed_id: [u8; 32],
+        // feed_id: [u8; 32],
     ) -> Result<u128> {
         let mut pool_amount_usd: u128 = 0;
         for (idx, &custody) in self.custodies.iter().enumerate() {
@@ -744,7 +744,7 @@ impl Pool {
                 &custody.oracle,
                 curtime,
                 false,
-                feed_id,
+                custody.oracle.feed_id,
             )?;
 
             let token_ema_price = OraclePrice::new_from_oracle(
@@ -753,7 +753,7 @@ impl Pool {
                 &custody.oracle,
                 curtime,
                 custody.pricing.use_ema,
-                feed_id,
+                custody.oracle.feed_id,
             )?;
 
             let aum_token_price = match aum_calc_mode {
@@ -1165,6 +1165,7 @@ mod test {
             oracle_authority: Pubkey::default(),
             max_price_error: 100,
             max_price_age_sec: 1,
+            feed_id: [0; 32],
         };
 
         let pricing = PricingParams {

@@ -39,7 +39,7 @@ pub struct GetOraclePrice<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetOraclePriceParams {
     ema: bool,
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn get_oracle_price(
@@ -55,7 +55,7 @@ pub fn get_oracle_price(
         &custody.oracle,
         curtime,
         params.ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     Ok(price

@@ -55,7 +55,7 @@ pub struct GetRemoveLiquidityAmountAndFee<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GetRemoveLiquidityAmountAndFeeParams {
     lp_amount_in: u64,
-    feed_id: [u8; 32],
+    // feed_id: [u8; 32],
 }
 
 pub fn get_remove_liquidity_amount_and_fee(
@@ -79,7 +79,7 @@ pub fn get_remove_liquidity_amount_and_fee(
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -88,14 +88,14 @@ pub fn get_remove_liquidity_amount_and_fee(
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let pool_amount_usd = pool.get_assets_under_management_usd(
         AumCalcMode::Min,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // params.feed_id,
     )?;
 
     let remove_amount_usd = math::checked_as_u64(math::checked_div(

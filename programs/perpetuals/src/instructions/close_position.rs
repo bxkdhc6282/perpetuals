@@ -104,7 +104,7 @@ pub struct ClosePosition<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy)]
 pub struct ClosePositionParams {
     pub price: u64,
-    pub feed_id: [u8; 32],
+    // pub feed_id: [u8; 32],
 }
 
 pub fn close_position(ctx: Context<ClosePosition>, params: &ClosePositionParams) -> Result<()> {
@@ -135,7 +135,7 @@ pub fn close_position(ctx: Context<ClosePosition>, params: &ClosePositionParams)
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let token_ema_price = OraclePrice::new_from_oracle(
@@ -144,16 +144,16 @@ pub fn close_position(ctx: Context<ClosePosition>, params: &ClosePositionParams)
         &custody.oracle,
         curtime,
         custody.pricing.use_ema,
-        params.feed_id,
+        custody.oracle.feed_id,
     )?;
 
     let collateral_token_price = OraclePrice::new_from_oracle(
         &ctx.accounts.collateral_custody_oracle_account,
-        ctx.accounts.custody_twap_account.as_ref(),
+        ctx.accounts.collateral_custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
@@ -162,7 +162,7 @@ pub fn close_position(ctx: Context<ClosePosition>, params: &ClosePositionParams)
         &custody.oracle,
         curtime,
         false,
-        params.feed_id,
+        collateral_custody.oracle.feed_id,
     )?;
 
     let exit_price = pool.get_exit_price(&token_price, &token_ema_price, position.side, custody)?;

@@ -19,14 +19,14 @@ use {
 
 solana_security_txt::security_txt! {
     name: "Perpetuals",
-    project_url: "https://github.com/solana-labs/perpetuals",
-    contacts: "email:defi@solana.com",
+    project_url: "https://github.com/bxkdhc6282/perpetuals",
+    contacts: "email:bxkdhc6282@gmail.com",
     policy: "",
     preferred_languages: "en",
     auditors: "Halborn"
 }
 
-declare_id!("Bmr31xzZYYVUdoHmAJL1DAp2anaitW8Tw9YfASS94MKJ");
+declare_id!("BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX");
 
 #[program]
 pub mod perpetuals {
@@ -56,6 +56,16 @@ pub mod perpetuals {
         params: AddCustodyParams,
     ) -> Result<u8> {
         instructions::add_custody(ctx, &params)
+    }
+
+    /// THIS IS MEANT TO BE USED WITH ADD CUSTODY INSTRUCTION
+    /// ADD IN SAME TRANSACTION ONLY
+
+    pub fn add_custody_init<'info>(
+        ctx: Context<'_, '_, '_, 'info, AddCustodyInit<'info>>,
+        params: AddCustodyInitParams,
+    ) -> Result<u8> {
+        instructions::add_custody_init(ctx, &params)
     }
 
     pub fn remove_custody<'info>(
@@ -163,11 +173,8 @@ pub mod perpetuals {
         instructions::liquidate(ctx, &params)
     }
 
-    pub fn update_pool_aum(
-        ctx: Context<UpdatePoolAum>,
-        params: UpdatePoolAumParams,
-    ) -> Result<u128> {
-        instructions::update_pool_aum(ctx, &params)
+    pub fn update_pool_aum(ctx: Context<UpdatePoolAum>) -> Result<u128> {
+        instructions::update_pool_aum(ctx)
     }
 
     pub fn get_add_liquidity_amount_and_fee(

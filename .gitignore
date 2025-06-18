@@ -12,3 +12,8 @@ test-ledger
 
 .pnp.*
 .yarn/
+.env
+keys
+
+**/keys
+**/dist

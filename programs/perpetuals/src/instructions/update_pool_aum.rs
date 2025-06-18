@@ -37,7 +37,7 @@ pub struct UpdatePoolAum<'info> {
     //   pool.tokens.len() custody oracles (read-only, unsigned)
 }
 
-pub fn update_pool_aum(ctx: Context<UpdatePoolAum>, params: &UpdatePoolAumParams) -> Result<u128> {
+pub fn update_pool_aum(ctx: Context<UpdatePoolAum>) -> Result<u128> {
     let perpetuals: &Account<'_, Perpetuals> = ctx.accounts.perpetuals.as_ref();
     let pool = ctx.accounts.pool.as_mut();
 
@@ -52,7 +52,7 @@ pub fn update_pool_aum(ctx: Context<UpdatePoolAum>, params: &UpdatePoolAumParams
         AumCalcMode::EMA,
         ctx.remaining_accounts,
         curtime,
-        params.feed_id,
+        // params.feed_id,
     )?;
 
     msg!("Updated value: {}", pool.aum_usd);
