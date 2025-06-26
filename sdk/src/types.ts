@@ -5,6 +5,7 @@ import {
   PublicKey,
   AccountMeta,
   Connection,
+  Keypair,
   // TransactionInstruction,
 } from '@solana/web3.js';
 import { Custody, Multisig, Position } from './idl/types/accounts';
@@ -20,7 +21,7 @@ import { PythSolanaReceiver } from '@pythnetwork/pyth-solana-receiver';
 export type Environment = 'mainnet' | 'devnet' | 'testnet';
 
 export interface IWallet extends Wallet {
-  signAndSendTransaction(tx: Transaction): Promise<{ signature: string }>;
+  signAndSendTransaction(tx: Transaction, signers?: Keypair[]): Promise<{ signature: string }>;
   publicKey: PublicKey;
   signAndSendWithOracle(
     tx: Transaction,
@@ -80,6 +81,8 @@ export interface IPerpetualsClient {
 
   getCustodyTokenAccountKey(poolName: string, tokenMint: PublicKey): PublicKey;
 
+  getCustodyTokenAccountKey2(poolName: string, tokenMint: PublicKey): PublicKey;
+
   getCustody(poolName: string, tokenMint: PublicKey): Promise<Custody>;
 
   getCustodyOracleAccountKey(poolName: string, tokenMint: PublicKey): Promise<PublicKey>;
@@ -123,7 +126,12 @@ export interface IPerpetualsClient {
 
   getTime(): number;
 
-  getOraclePrice(poolName: string, tokenMint: PublicKey, ema: boolean): Promise<BN>;
+  getOraclePrice(
+    poolName: string,
+    tokenMint: PublicKey,
+    ema: boolean,
+    custodyFeedId: string
+  ): Promise<BN>;
 
   getAddLiquidityAmountAndFee(
     poolName: string,
@@ -144,7 +152,9 @@ export interface IPerpetualsClient {
     collateralMint: PublicKey,
     collateral: BN,
     size: BN,
-    side: 'none' | 'long' | 'short'
+    side: 'none' | 'long' | 'short',
+    custodyFeedId: string,
+    collateralFeedId: string
   ): Promise<NewPositionPricesAndFee>;
 
   getExitPriceAndFee(
@@ -152,7 +162,9 @@ export interface IPerpetualsClient {
     poolName: string,
     tokenMint: PublicKey,
     collateralMint: PublicKey,
-    side: 'none' | 'long' | 'short'
+    side: 'none' | 'long' | 'short',
+    custodyFeedId: string,
+    collateralFeedId: string
   ): Promise<PriceAndFee>;
 
   getLiquidationPrice(
@@ -345,6 +357,7 @@ export type Asset = {
   symbol: string;
   mint: string;
   isStable: boolean;
+  isVirtual: boolean;
   feedId: string;
   imageUrl?: string;
   decimals?: number;

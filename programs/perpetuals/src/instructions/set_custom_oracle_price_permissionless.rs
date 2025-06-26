@@ -21,18 +21,18 @@ pub struct SetCustomOraclePricePermissionless<'info> {
     pub perpetuals: Box<Account<'info, Perpetuals>>,
 
     #[account(
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
     #[account(
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
         constraint = custody.key() == params.custody_account,
-        bump = custody.bump
+        // bump = custody.bump
     )]
     pub custody: Box<Account<'info, Custody>>,
 

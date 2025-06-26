@@ -11,7 +11,7 @@ use {
         try_from,
     },
     anchor_lang::prelude::*,
-    pyth_solana_receiver_sdk::price_update::{PriceUpdateV2, TwapUpdate},
+    pyth_solana_receiver_sdk::price_update::PriceUpdateV2,
     std::cmp::Ordering,
 };
 
@@ -734,13 +734,13 @@ impl Pool {
 
             let oracle_account = try_from!(Account::<PriceUpdateV2>, oracle_info)?;
 
-            let twap_info = accounts[oracle_idx].to_account_info();
+            //let twap_info = accounts[oracle_idx].to_account_info();
 
-            let twap_account = try_from!(Account::<TwapUpdate>, twap_info)?;
+            //let _twap_account = try_from!(Account::<TwapUpdate>, twap_info)?;
 
             let token_price = OraclePrice::new_from_oracle(
                 &oracle_account,
-                Some(&twap_account),
+                None,
                 &custody.oracle,
                 curtime,
                 false,
@@ -749,10 +749,10 @@ impl Pool {
 
             let token_ema_price = OraclePrice::new_from_oracle(
                 &oracle_account,
-                Some(&twap_account),
+                None,
                 &custody.oracle,
                 curtime,
-                custody.pricing.use_ema,
+                false,
                 custody.oracle.feed_id,
             )?;
 

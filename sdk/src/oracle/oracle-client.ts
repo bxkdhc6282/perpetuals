@@ -25,10 +25,8 @@ export class OracleClient implements IOracleClient {
     return Math.floor(Math.random() * 0x10000); // 0x10000 is 2^16
   }
 
-  async getTwapUpdate(feedId: string) {
-    const twapWindowSeconds = 150;
-
-    const twapUpdateData = await this.hermesClient.getLatestTwaps([feedId], twapWindowSeconds, {
+  async getTwapUpdate(feedIds: string[], twapWindowSeconds: number = 150) {
+    const twapUpdateData = await this.hermesClient.getLatestTwaps(feedIds, twapWindowSeconds, {
       encoding: 'base64',
     });
     console.log(twapUpdateData.binary.data);
@@ -43,11 +41,19 @@ export class OracleClient implements IOracleClient {
     return priceUpdateData;
   }
 
+  async getTwapUpdateAccount(feedIds: string[]) {
+    const twapUpdateData = await this.getTwapUpdate(feedIds);
+
+    const twapUpdateDataArray = twapUpdateData.binary.data.map((data) => data.toString());
+
+    const res = await this.pythSolanaReceiver.buildPostTwapUpdateInstructions(twapUpdateDataArray);
+
+    return res;
+  }
+
   fetchFeedAccount(feedId: string): PublicKey {
-    const shardId = this.getRandomShardId();
-    const feedAccount = this.pythSolanaReceiver
-      .getPriceFeedAccountAddress(shardId, feedId)
-      .toBase58();
+    // const shardId = this.getRandomShardId();
+    const feedAccount = this.pythSolanaReceiver.getPriceFeedAccountAddress(0, feedId).toBase58();
     console.log(feedAccount);
     return new PublicKey(feedAccount);
   }

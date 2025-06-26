@@ -51,18 +51,18 @@ pub struct AddLiquidity<'info> {
 
     #[account(
         mut,
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
     #[account(
         mut,
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
-        bump = custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
+        // bump = custody.bump
     )]
     pub custody: Box<Account<'info, Custody>>,
 
@@ -75,10 +75,10 @@ pub struct AddLiquidity<'info> {
 
     #[account(
         mut,
-        seeds = [b"custody_token_account",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
-        bump = custody.token_account_bump
+        // seeds = [b"custody_token_account",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
+        // bump = custody.token_account_bump
     )]
     pub custody_token_account: Box<Account<'info, TokenAccount>>,
 

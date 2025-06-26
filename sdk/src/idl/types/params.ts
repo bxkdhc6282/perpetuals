@@ -138,4 +138,4 @@ export type RemoveCustodyParams = IdlTypes<PerpetualsIdl>['removeCustodyParams']
 
 export type SetCustomOraclePriceParams = IdlTypes<PerpetualsIdl>['setCustomOraclePriceParams'];
 
-export type AddCustodyInitParams = IdlTypes<PerpetualsIdl>['addCustodyInitParams'];
+export type SetCustodyConfigParams = IdlTypes<PerpetualsIdl>['setCustodyConfigParams'];

@@ -149,6 +149,55 @@ yarn lint
 yarn format
 ```
 
+alge admin add-custody \
+ --pool-name forex \
+ --virtual \
+ --oracle-type pyth \
+ --oracle-authority DK1wKG1kVExnn1TMjQexwHy31EXST6zpztGB8hZAiUN \
+--max-price-error 10000 \
+ --max-price-age 60 \
+ --oracle-feed-id 0x67a6f93030420c1c9e3fe37c1ab6b77966af82f995944a9fefce357a22854a80 \
+ --use-ema \
+ --use-unrealized-pnl-in-aum \
+ --trade-spread-long 100 \
+ --trade-spread-short 100 \
+ --swap-spread 300 \
+ --min-initial-leverage 10000 \
+ --max-initial-leverage 1000000 \
+ --max-leverage 1000000 \
+ --max-payoff-multiplier 10000 \
+ --max-utilization 10000 \
+ --max-position-locked-usd 1000000000 \
+ --max-total-locked-usd 1000000000 \
+ --allow-swap \
+ --allow-add-liquidity \
+ --allow-remove-liquidity \
+ --allow-open-position \
+ --allow-close-position \
+ --allow-pnl-withdrawal \
+ --allow-collateral-withdrawal \
+ --allow-size-change \
+ --fees-mode optimal \
+ --ratio-multiplier 20000 \
+ --utilization-multiplier 20000 \
+ --swap-in-fee 100 \
+ --swap-out-fee 100 \
+ --stable-swap-in-fee 100 \
+ --stable-swap-out-fee 100 \
+ --add-liquidity-fee 100 \
+ --remove-liquidity-fee 100 \
+ --open-position-fee 100 \
+ --close-position-fee 100 \
+ --liquidation-fee 100 \
+ --protocol-share 30 \
+ --fee-max 250 \
+ --fee-optimal 10 \
+ --base-borrow-rate 0 \
+ --borrow-rate-slope-1 80000 \
+ --borrow-rate-slope-2 120000 \
+ --optimal-utilization 800000000 \
+ --token-ratio 10000,10,10000
+
 ## Architecture
 
 The CLI is built with:

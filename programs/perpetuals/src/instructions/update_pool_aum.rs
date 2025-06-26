@@ -27,9 +27,9 @@ pub struct UpdatePoolAum<'info> {
 
     #[account(
         mut,
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
     // remaining accounts:

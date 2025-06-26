@@ -20,7 +20,7 @@ pub enum OracleType {
 
 impl Default for OracleType {
     fn default() -> Self {
-        Self::None
+        Self::Pyth
     }
 }
 
@@ -100,7 +100,7 @@ impl OraclePrice {
         twap_update: Option<&Account<TwapUpdate>>,
         oracle_params: &OracleParams,
         current_time: i64,
-        use_ema: bool,
+        _use_ema: bool,
         feed_id: [u8; 32],
     ) -> Result<Self> {
         match oracle_params.oracle_type {
@@ -109,7 +109,7 @@ impl OraclePrice {
                 oracle_params.max_price_error,
                 oracle_params.max_price_age_sec,
                 current_time,
-                use_ema,
+                false,
             ),
             OracleType::Pyth => Self::get_pyth_price(
                 price_update,
@@ -117,7 +117,7 @@ impl OraclePrice {
                 oracle_params.max_price_error,
                 oracle_params.max_price_age_sec,
                 current_time,
-                use_ema,
+                false,
                 feed_id,
             ),
             _ => err!(PerpetualsError::UnsupportedOracle),
@@ -300,7 +300,7 @@ impl OraclePrice {
             PerpetualsError::InvalidOracleAccount
         );
 
-        let maximum_age: u64 = 30;
+        let maximum_age: u64 = 300;
 
         let twap_price = match twap_update {
             Some(twap) => Some(twap.get_twap_no_older_than(

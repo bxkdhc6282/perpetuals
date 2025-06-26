@@ -20,17 +20,17 @@ pub struct GetSwapAmountAndFees<'info> {
     pub perpetuals: Box<Account<'info, Perpetuals>>,
 
     #[account(
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
     #[account(
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 receiving_custody.mint.as_ref()],
-        bump = receiving_custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          receiving_custody.mint.as_ref()],
+        // bump = receiving_custody.bump
     )]
     pub receiving_custody: Box<Account<'info, Custody>>,
 
@@ -41,10 +41,10 @@ pub struct GetSwapAmountAndFees<'info> {
     pub receiving_custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 dispensing_custody.mint.as_ref()],
-        bump = dispensing_custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          dispensing_custody.mint.as_ref()],
+        // bump = dispensing_custody.bump
     )]
     pub dispensing_custody: Box<Account<'info, Custody>>,
 

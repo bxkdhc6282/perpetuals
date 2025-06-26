@@ -594,6 +594,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ausd_faucet"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "bytemuck",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -21,9 +21,9 @@ pub struct GetExitPriceAndFee<'info> {
     pub perpetuals: Box<Account<'info, Perpetuals>>,
 
     #[account(
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
@@ -38,10 +38,10 @@ pub struct GetExitPriceAndFee<'info> {
     pub position: Box<Account<'info, Position>>,
 
     #[account(
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
-        bump = custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
+        // bump = custody.bump
     )]
     pub custody: Box<Account<'info, Custody>>,
 
@@ -52,10 +52,10 @@ pub struct GetExitPriceAndFee<'info> {
     pub custody_twap_account: Option<Account<'info, TwapUpdate>>,
 
     #[account(
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 collateral_custody.mint.as_ref()],
-        bump = collateral_custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          collateral_custody.mint.as_ref()],
+        // bump = collateral_custody.bump
     )]
     pub collateral_custody: Box<Account<'info, Custody>>,
 

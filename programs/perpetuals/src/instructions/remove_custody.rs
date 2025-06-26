@@ -46,28 +46,28 @@ pub struct RemoveCustody<'info> {
                               (pool.ratios.len() - 1) * std::mem::size_of::<TokenRatios>(),
         realloc::payer = admin,
         realloc::zero = false,
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
     #[account(
         mut,
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
-        bump = custody.bump,
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
+        // bump = custody.bump,
         close = transfer_authority
     )]
     pub custody: Box<Account<'info, Custody>>,
 
     #[account(
         mut,
-        seeds = [b"custody_token_account",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
-        bump = custody.token_account_bump,
+        // seeds = [b"custody_token_account",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
+        // bump = custody.token_account_bump,
     )]
     pub custody_token_account: Box<Account<'info, TokenAccount>>,
 

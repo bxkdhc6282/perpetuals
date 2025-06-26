@@ -207,3 +207,11 @@ Solana Perpetuals codebase is released under [Apache License 2.0](LICENSE).
 ## Disclaimer
 
 By accessing or using Solana Perpetuals or any of its components, you accept and agree with the [Disclaimer](DISCLAIMER.md).
+
+solana-keygen recover -o buffer-key.json --force
+
+anchor deploy --program-name perpetuals
+
+anchor build --program-name perpetuals
+
+solana program deploy --buffer buffer-key.json --program-id target/deploy/perpetuals-keypair.json target/deploy/perpetuals.so

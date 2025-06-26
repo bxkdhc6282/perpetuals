@@ -43,9 +43,32 @@ export class KeypairWalletAdapter implements IWallet {
     });
   }
 
-  async signAndSendTransaction(tx: Transaction): Promise<{ signature: string }> {
-    tx.sign(this.payer);
-    const txHash = await sendAndConfirmTransaction(this.connection, tx, [this.payer]);
+  async signAndSendTransaction(
+    tx: Transaction,
+    signers?: Keypair[]
+  ): Promise<{ signature: string }> {
+    const xSigners: Keypair[] = [];
+    if (signers) {
+      xSigners.push(...signers);
+      tx.partialSign(...xSigners);
+      tx.signatures.forEach((sig) =>
+        console.log(
+          'Signer required:',
+          sig.publicKey.toBase58(),
+          'Is signed:',
+          sig.signature !== null
+        )
+      );
+    } else {
+      tx.sign(this.payer);
+    }
+
+    const txHash = await sendAndConfirmTransaction(
+      this.connection,
+      tx,
+      signers ? [...xSigners] : [this.payer]
+    );
+
     return { signature: txHash };
   }
 }

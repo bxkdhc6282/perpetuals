@@ -26,10 +26,10 @@ pub async fn test_add_custody(
 ) -> std::result::Result<(anchor_lang::prelude::Pubkey, u8), BanksClientError> {
     // ==== WHEN ==============================================================
     let multisig_pda = pda::get_multisig_pda().0;
-    let transfer_authority_pda = pda::get_transfer_authority_pda().0;
+    // let transfer_authority_pda = pda::get_transfer_authority_pda().0;
     let perpetuals_pda = pda::get_perpetuals_pda().0;
     let (custody_pda, custody_bump) = pda::get_custody_pda(pool_pda, custody_token_mint);
-    let (custody_token_account_pda, custody_token_account_bump) =
+    let (custody_token_account_pda, _custody_token_account_bump) =
         pda::get_custody_token_account_pda(pool_pda, custody_token_mint);
 
     let multisig_account = utils::get_account::<Multisig>(program_test_ctx, multisig_pda).await;
@@ -42,7 +42,7 @@ pub async fn test_add_custody(
             let accounts = perpetuals::accounts::AddCustody {
                 admin: admin.pubkey(),
                 multisig: multisig_pda,
-                transfer_authority: transfer_authority_pda,
+                // transfer_authority: transfer_authority_pda,
                 perpetuals: perpetuals_pda,
                 pool: *pool_pda,
                 custody: custody_pda,
@@ -94,10 +94,10 @@ pub async fn test_add_custody(
         assert_eq!(custody_account.fees, params.fees);
         assert_eq!(custody_account.borrow_rate, params.borrow_rate,);
         assert_eq!(custody_account.bump, custody_bump);
-        assert_eq!(
-            custody_account.token_account_bump,
-            custody_token_account_bump
-        );
+        // assert_eq!(
+        //     custody_account.token_account_bump,
+        //     custody_token_account_bump
+        // );
     }
 
     let pool_account = utils::get_account::<Pool>(program_test_ctx, *pool_pda).await;

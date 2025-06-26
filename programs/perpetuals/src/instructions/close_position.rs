@@ -44,9 +44,9 @@ pub struct ClosePosition<'info> {
 
     #[account(
         mut,
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+            // seeds = [b"pool",
+            //             pool.name.as_bytes()],
+            //     bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
@@ -91,10 +91,10 @@ pub struct ClosePosition<'info> {
 
     #[account(
         mut,
-        seeds = [b"custody_token_account",
-                 pool.key().as_ref(),
-                 collateral_custody.mint.as_ref()],
-        bump = collateral_custody.token_account_bump
+        // seeds = [b"custody_token_account",
+        //          pool.key().as_ref(),
+        //          collateral_custody.mint.as_ref()],
+        // bump = collateral_custody.token_account_bump
     )]
     pub collateral_custody_token_account: Box<Account<'info, TokenAccount>>,
 

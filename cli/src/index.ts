@@ -10,6 +10,7 @@ import { LiquidityCommands } from "./commands/liquidity-commands";
 import { AdminCommands } from "./commands/admin-commands";
 import { InfoCommands } from "./commands/info-commands";
 import { ConfigCommands } from "./commands/config-commands";
+import { FaucetCommands } from "./commands/faucet-commands";
 
 const program = new Command();
 
@@ -40,6 +41,7 @@ new LiquidityCommands(program, walletManager, configManager);
 new AdminCommands(program, walletManager, configManager);
 new InfoCommands(program, walletManager, configManager);
 new ConfigCommands(program, configManager);
+new FaucetCommands(program, walletManager, configManager);
 
 // Global error handling
 program.exitOverride();

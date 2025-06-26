@@ -1,0 +1,164 @@
+{
+  "address": "7bQarQwLudufBiKvbMA3RX5zco86TwxiVf9395tiLk8R",
+  "metadata": {
+    "name": "ausd_faucet",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Solana AUSD Faucet",
+    "repository": "https://github.com/solana-labs/perpetuals"
+  },
+  "instructions": [
+    {
+      "name": "initialize",
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
+      "accounts": [
+        {
+          "name": "faucet_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [102, 97, 117, 99, 101, 116, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "mint_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint_account",
+          "writable": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "mint_to_user",
+      "discriminator": [75, 194, 44, 77, 10, 65, 232, 85],
+      "accounts": [
+        {
+          "name": "faucet_config"
+        },
+        {
+          "name": "mint_account",
+          "writable": true
+        },
+        {
+          "name": "user_token_account",
+          "writable": true
+        },
+        {
+          "name": "mint_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "transfer_mint_authority",
+      "discriminator": [87, 237, 187, 84, 168, 175, 241, 75],
+      "accounts": [
+        {
+          "name": "faucet_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [102, 97, 117, 99, 101, 116, 95, 99, 111, 110, 102, 105, 103]
+              },
+              {
+                "kind": "account",
+                "path": "mint_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true,
+          "relations": ["faucet_config"]
+        },
+        {
+          "name": "mint_account",
+          "writable": true
+        },
+        {
+          "name": "mint_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "FaucetConfig",
+      "discriminator": [216, 31, 49, 154, 106, 125, 143, 142]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidMintAccountAuthority",
+      "msg": "Program not mint authority"
+    }
+  ],
+  "types": [
+    {
+      "name": "FaucetConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint_authority_nonce",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

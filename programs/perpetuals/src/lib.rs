@@ -26,7 +26,7 @@ solana_security_txt::security_txt! {
     auditors: "Halborn"
 }
 
-declare_id!("BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX");
+declare_id!("6RfdxdBjsqLmgBtJizGSAu4NyXTctDGPRYJB8YmeqGio");
 
 #[program]
 pub mod perpetuals {
@@ -58,15 +58,21 @@ pub mod perpetuals {
         instructions::add_custody(ctx, &params)
     }
 
-    /// THIS IS MEANT TO BE USED WITH ADD CUSTODY INSTRUCTION
-    /// ADD IN SAME TRANSACTION ONLY
+    // !THIS IS MEANT TO BE USED WITH ADD CUSTODY INSTRUCTION
+    // !ADD IN SAME TRANSACTION ONLY
 
-    pub fn add_custody_init<'info>(
-        ctx: Context<'_, '_, '_, 'info, AddCustodyInit<'info>>,
-        params: AddCustodyInitParams,
-    ) -> Result<u8> {
-        instructions::add_custody_init(ctx, &params)
+    pub fn add_custody_token_account<'info>(
+        ctx: Context<'_, '_, '_, 'info, AddCustodyTokenAccount<'info>>,
+    ) -> Result<()> {
+        instructions::add_custody_token_account(ctx)
     }
+
+    // pub fn add_custody_init<'info>(
+    //     ctx: Context<'_, '_, '_, 'info, AddCustodyInit<'info>>,
+    //     params: AddCustodyInitParams,
+    // ) -> Result<u8> {
+    //     instructions::add_custody_init(ctx, &params)
+    // }
 
     pub fn remove_custody<'info>(
         ctx: Context<'_, '_, '_, 'info, RemoveCustody<'info>>,

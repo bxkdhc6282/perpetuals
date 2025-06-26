@@ -157,7 +157,8 @@ pub struct Custody {
 
     // bumps for address validation
     pub bump: u8,
-    pub token_account_bump: u8,
+    // pub token_account_bump: u8,
+    // pub is_initialized: bool,
 }
 
 #[derive(Copy, Clone, PartialEq, AnchorSerialize, AnchorDeserialize, Default, Debug)]
@@ -201,7 +202,8 @@ pub struct DeprecatedCustody {
 
     // bumps for address validation
     pub bump: u8,
-    pub token_account_bump: u8,
+    // pub token_account_bump: u8,
+    // pub is_initialized: bool,
 }
 
 impl Default for FeesMode {

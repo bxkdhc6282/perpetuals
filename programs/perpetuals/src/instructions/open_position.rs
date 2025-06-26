@@ -45,9 +45,9 @@ pub struct OpenPosition<'info> {
 
     #[account(
         mut,
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
@@ -66,10 +66,10 @@ pub struct OpenPosition<'info> {
 
     #[account(
         mut,
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 custody.mint.as_ref()],
-        bump = custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          custody.mint.as_ref()],
+        // bump = custody.bump
     )]
     pub custody: Box<Account<'info, Custody>>,
 
@@ -78,10 +78,10 @@ pub struct OpenPosition<'info> {
 
     #[account(
         mut,
-        seeds = [b"custody",
-                 pool.key().as_ref(),
-                 collateral_custody.mint.as_ref()],
-        bump = collateral_custody.bump
+        // seeds = [b"custody",
+        //          pool.key().as_ref(),
+        //          collateral_custody.mint.as_ref()],
+        // bump = collateral_custody.bump
     )]
     pub collateral_custody: Box<Account<'info, Custody>>,
 
@@ -93,10 +93,10 @@ pub struct OpenPosition<'info> {
 
     #[account(
         mut,
-        seeds = [b"custody_token_account",
-                 pool.key().as_ref(),
-                 collateral_custody.mint.as_ref()],
-        bump = collateral_custody.token_account_bump
+        // seeds = [b"custody_token_account",
+        //          pool.key().as_ref(),
+        //          collateral_custody.mint.as_ref()],
+        // bump = collateral_custody.token_account_bump
     )]
     pub collateral_custody_token_account: Box<Account<'info, TokenAccount>>,
 
@@ -177,11 +177,11 @@ pub fn open_position(ctx: Context<OpenPosition>, params: &OpenPositionParams) ->
     )?;
 
     let collateral_token_ema_price = OraclePrice::new_from_oracle(
-        &ctx.accounts.custody_oracle_account,
+        &ctx.accounts.collateral_custody_oracle_account,
         ctx.accounts.collateral_custody_twap_account.as_ref(),
         &custody.oracle,
         curtime,
-        custody.pricing.use_ema,
+        false,
         collateral_custody.oracle.feed_id,
     )?;
 

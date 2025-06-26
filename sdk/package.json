@@ -24,7 +24,7 @@
     "@dynamic-labs/solana": "^4.16.0",
     "@pythnetwork/hermes-client": "^2.0.0",
     "@pythnetwork/pyth-solana-receiver": "^0.10.1",
-    "@solana/spl-token": "^0.3.6",
+    "@solana/spl-token": "^0.4.13",
     "@solana/web3.js": "^1.70.1",
     "bs58": "^6.0.0",
     "js-sha256": "^0.11.1",

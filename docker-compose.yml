@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  perpetuals-dev:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/workdir
+    working_dir: /workdir
+    tty: true
+    stdin_open: true

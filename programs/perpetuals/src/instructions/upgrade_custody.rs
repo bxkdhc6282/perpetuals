@@ -74,9 +74,9 @@ pub struct UpgradeCustody<'info> {
 
     #[account(
         mut,
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 
@@ -149,7 +149,8 @@ pub fn upgrade_custody<'a, 'b, 'c, 'info>(
         short_positions: deprecated_custody.short_positions,
         borrow_rate_state: deprecated_custody.borrow_rate_state,
         bump: deprecated_custody.bump,
-        token_account_bump: deprecated_custody.token_account_bump,
+        // token_account_bump: deprecated_custody.token_account_bump,
+        // is_initialized: deprecated_custody.is_initialized,
     };
 
     if !custody_data.validate() {

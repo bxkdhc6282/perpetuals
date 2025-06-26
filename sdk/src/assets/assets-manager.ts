@@ -1,5 +1,5 @@
-import { Asset, AssetType } from "../types";
-import assets from "./supported-assets.json";
+import { Asset, AssetType } from '../types';
+import assets from './supported-assets.json';
 
 export class AssetManager {
   private static instance: AssetManager;
@@ -30,34 +30,55 @@ export class AssetManager {
   }
 
   public getAllAssets(): Asset[] {
-    return Object.values(this.assets);
+    // Return unique assets by filtering out duplicate entries
+    const uniqueAssets = new Map<string, Asset>();
+    Object.values(this.assets).forEach((asset) => {
+      uniqueAssets.set(asset.feedId, asset);
+    });
+    return Array.from(uniqueAssets.values());
   }
 
   public getAssetByType(type: AssetType): Asset[] {
-    return Object.values(this.assets).filter((asset) => asset.type === type);
+    const uniqueAssets = new Map<string, Asset>();
+    Object.values(this.assets).forEach((asset) => {
+      if (asset.type === type) {
+        uniqueAssets.set(asset.feedId, asset);
+      }
+    });
+    return Array.from(uniqueAssets.values());
   }
 
   public getAssetByIsStable(isStable: boolean): Asset[] {
-    return Object.values(this.assets).filter(
-      (asset) => asset.isStable === isStable
-    );
+    const uniqueAssets = new Map<string, Asset>();
+    Object.values(this.assets).forEach((asset) => {
+      if (asset.isStable === isStable) {
+        uniqueAssets.set(asset.feedId, asset);
+      }
+    });
+    return Array.from(uniqueAssets.values());
   }
 
-  public getAssetByTypeAndIsStable(
-    type: AssetType,
-    isStable: boolean
-  ): Asset[] {
-    return Object.values(this.assets).filter(
-      (asset) => asset.type === type && asset.isStable === isStable
-    );
+  public getAssetByTypeAndIsStable(type: AssetType, isStable: boolean): Asset[] {
+    const uniqueAssets = new Map<string, Asset>();
+    Object.values(this.assets).forEach((asset) => {
+      if (asset.type === type && asset.isStable === isStable) {
+        uniqueAssets.set(asset.feedId, asset);
+      }
+    });
+    return Array.from(uniqueAssets.values());
   }
 
   private loadAssets() {
     assets.assets.forEach((asset) => {
-      this.assets[asset.feedId] = {
+      const assetWithType = {
         ...asset,
         type: asset.type as AssetType,
       };
+
+      // Index by multiple keys for different lookup methods
+      this.assets[asset.feedId] = assetWithType;
+      this.assets[asset.symbol] = assetWithType;
+      this.assets[asset.mint] = assetWithType;
     });
   }
 }

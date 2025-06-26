@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/perpetuals.json`.
  */
 export type Perpetuals = {
-  address: '';
+  address: '6RfdxdBjsqLmgBtJizGSAu4NyXTctDGPRYJB8YmeqGio';
   metadata: {
     name: 'perpetuals';
     version: '0.1.0';
@@ -72,19 +72,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
@@ -115,45 +102,6 @@ export type Perpetuals = {
         {
           name: 'collateralCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'tokenProgram';
@@ -209,6 +157,7 @@ export type Perpetuals = {
         },
         {
           name: 'custody';
+          writable: true;
           pda: {
             seeds: [
               {
@@ -227,31 +176,52 @@ export type Perpetuals = {
           };
         },
         {
-          name: 'transferAuthority';
+          name: 'custodyTokenAccount';
+        },
+        {
+          name: 'custodyTokenMint';
+        },
+        {
+          name: 'systemProgram';
+          address: '11111111111111111111111111111111';
+        },
+        {
+          name: 'tokenProgram';
+          address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
+        },
+        {
+          name: 'rent';
+          address: 'SysvarRent111111111111111111111111111111111';
+        },
+      ];
+      args: [
+        {
+          name: 'params';
+          type: {
+            defined: {
+              name: 'addCustodyParams';
+            };
+          };
+        },
+      ];
+      returns: 'u8';
+    },
+    {
+      name: 'addCustodyTokenAccount';
+      discriminator: [253, 172, 82, 127, 7, 133, 208, 194];
+      accounts: [
+        {
+          name: 'admin';
+          writable: true;
+          signer: true;
+        },
+        {
+          name: 'perpetuals';
           pda: {
             seeds: [
               {
                 kind: 'const';
-                value: [
-                  116,
-                  114,
-                  97,
-                  110,
-                  115,
-                  102,
-                  101,
-                  114,
-                  95,
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121,
-                ];
+                value: [112, 101, 114, 112, 101, 116, 117, 97, 108, 115];
               },
             ];
           };
@@ -299,78 +269,34 @@ export type Perpetuals = {
           };
         },
         {
-          name: 'custodyTokenMint';
-        },
-        {
-          name: 'systemProgram';
-          address: '11111111111111111111111111111111';
-        },
-        {
-          name: 'tokenProgram';
-          address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-        },
-        {
-          name: 'rent';
-          address: 'SysvarRent111111111111111111111111111111111';
-        },
-      ];
-      args: [
-        {
-          name: 'params';
-          type: {
-            defined: {
-              name: 'addCustodyParams';
-            };
-          };
-        },
-      ];
-      returns: 'u8';
-    },
-    {
-      name: 'addCustodyInit';
-      docs: [
-        'THIS IS MEANT TO BE USED WITH ADD CUSTODY INSTRUCTION',
-        'ADD IN SAME TRANSACTION ONLY',
-      ];
-      discriminator: [147, 67, 217, 189, 19, 190, 190, 24];
-      accounts: [
-        {
-          name: 'admin';
-          writable: true;
-          signer: true;
-        },
-        {
-          name: 'multisig';
-          writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [109, 117, 108, 116, 105, 115, 105, 103];
-              },
-            ];
-          };
-        },
-        {
           name: 'pool';
-          writable: true;
         },
         {
-          name: 'custody';
-          writable: true;
+          name: 'transferAuthority';
           pda: {
             seeds: [
               {
                 kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custodyTokenMint';
+                value: [
+                  116,
+                  114,
+                  97,
+                  110,
+                  115,
+                  102,
+                  101,
+                  114,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121,
+                ];
               },
             ];
           };
@@ -391,17 +317,7 @@ export type Perpetuals = {
           address: 'SysvarRent111111111111111111111111111111111';
         },
       ];
-      args: [
-        {
-          name: 'params';
-          type: {
-            defined: {
-              name: 'addCustodyInitParams';
-            };
-          };
-        },
-      ];
-      returns: 'u8';
+      args: [];
     },
     {
       name: 'addLiquidity';
@@ -465,40 +381,10 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -510,45 +396,6 @@ export type Perpetuals = {
         {
           name: 'custodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'lpTokenMint';
@@ -760,19 +607,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
@@ -803,45 +637,6 @@ export type Perpetuals = {
         {
           name: 'collateralCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'tokenProgram';
@@ -876,39 +671,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -966,19 +731,6 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
       ];
       args: [
@@ -1010,39 +762,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1053,23 +775,6 @@ export type Perpetuals = {
         },
         {
           name: 'collateralCustody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'collateralCustodyOracleAccount';
@@ -1112,42 +817,12 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1158,23 +833,6 @@ export type Perpetuals = {
         },
         {
           name: 'collateralCustody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'collateralCustodyOracleAccount';
@@ -1217,42 +875,12 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1301,42 +929,12 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1385,19 +983,6 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'lpTokenMint';
@@ -1444,39 +1029,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1515,42 +1070,12 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1603,39 +1128,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -1693,39 +1188,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'receivingCustody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'receiving_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'receivingCustodyOracleAccount';
@@ -1736,23 +1201,6 @@ export type Perpetuals = {
         },
         {
           name: 'dispensingCustody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'dispensing_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'dispensingCustodyOracleAccount';
@@ -1847,7 +1295,7 @@ export type Perpetuals = {
         },
         {
           name: 'perpetualsProgram';
-          address: 'BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX';
+          address: '6RfdxdBjsqLmgBtJizGSAu4NyXTctDGPRYJB8YmeqGio';
         },
         {
           name: 'systemProgram';
@@ -1930,19 +1378,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
@@ -1973,45 +1408,6 @@ export type Perpetuals = {
         {
           name: 'collateralCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'tokenProgram';
@@ -2087,19 +1483,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
@@ -2108,23 +1491,6 @@ export type Perpetuals = {
         {
           name: 'custody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -2136,23 +1502,6 @@ export type Perpetuals = {
         {
           name: 'collateralCustody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'collateralCustodyOracleAccount';
@@ -2164,45 +1513,6 @@ export type Perpetuals = {
         {
           name: 'collateralCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'systemProgram';
@@ -2282,19 +1592,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'position';
@@ -2325,45 +1622,6 @@ export type Perpetuals = {
         {
           name: 'collateralCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'collateral_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'tokenProgram';
@@ -2447,83 +1705,14 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'systemProgram';
@@ -2608,40 +1797,10 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyOracleAccount';
@@ -2653,45 +1812,6 @@ export type Perpetuals = {
         {
           name: 'custodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'lpTokenMint';
@@ -2792,19 +1912,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'systemProgram';
@@ -2879,40 +1986,10 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
       ];
       args: [
@@ -2961,39 +2038,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'oracleAccount';
@@ -3050,39 +2097,9 @@ export type Perpetuals = {
         },
         {
           name: 'pool';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'oracleAccount';
@@ -3272,40 +2289,10 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'receivingCustody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'receiving_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'receivingCustodyOracleAccount';
@@ -3317,66 +2304,10 @@ export type Perpetuals = {
         {
           name: 'receivingCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'receiving_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'dispensingCustody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'dispensing_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'dispensingCustodyOracleAccount';
@@ -3388,45 +2319,6 @@ export type Perpetuals = {
         {
           name: 'dispensingCustodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'dispensing_custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'tokenProgram';
@@ -3467,19 +2359,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
       ];
       args: [];
@@ -3509,19 +2388,6 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
@@ -3608,83 +2474,14 @@ export type Perpetuals = {
         {
           name: 'pool';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [112, 111, 111, 108];
-              },
-              {
-                kind: 'account';
-                path: 'pool.name';
-                account: 'pool';
-              },
-            ];
-          };
         },
         {
           name: 'custody';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [99, 117, 115, 116, 111, 100, 121];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'custodyTokenAccount';
           writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: 'const';
-                value: [
-                  99,
-                  117,
-                  115,
-                  116,
-                  111,
-                  100,
-                  121,
-                  95,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                ];
-              },
-              {
-                kind: 'account';
-                path: 'pool';
-              },
-              {
-                kind: 'account';
-                path: 'custody.mint';
-                account: 'custody';
-              },
-            ];
-          };
         },
         {
           name: 'receivingTokenAccount';
@@ -3831,13 +2628,6 @@ export type Perpetuals = {
             type: 'u64';
           },
         ];
-      };
-    },
-    {
-      name: 'addCustodyInitParams';
-      type: {
-        kind: 'struct';
-        fields: [];
       };
     },
     {
@@ -4157,10 +2947,6 @@ export type Perpetuals = {
           },
           {
             name: 'bump';
-            type: 'u8';
-          },
-          {
-            name: 'tokenAccountBump';
             type: 'u8';
           },
         ];

@@ -1,5 +1,5 @@
 {
-  "address": "",
+  "address": "6RfdxdBjsqLmgBtJizGSAu4NyXTctDGPRYJB8YmeqGio",
   "metadata": {
     "name": "perpetuals",
     "version": "0.1.0",
@@ -49,20 +49,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "position",
@@ -92,27 +79,7 @@
         },
         {
           "name": "collateral_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -168,6 +135,7 @@
         },
         {
           "name": "custody",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -186,41 +154,7 @@
           }
         },
         {
-          "name": "transfer_authority",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116, 114, 97, 110, 115, 102, 101, 114, 95, 97, 117, 116, 104, 111, 114, 105, 116,
-                  121
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody_token_mint"
-              }
-            ]
-          }
+          "name": "custody_token_account"
         },
         {
           "name": "custody_token_mint"
@@ -251,12 +185,8 @@
       "returns": "u8"
     },
     {
-      "name": "add_custody_init",
-      "docs": [
-        "THIS IS MEANT TO BE USED WITH ADD CUSTODY INSTRUCTION",
-        "ADD IN SAME TRANSACTION ONLY"
-      ],
-      "discriminator": [147, 67, 217, 189, 19, 190, 190, 24],
+      "name": "add_custody_token_account",
+      "discriminator": [253, 172, 82, 127, 7, 133, 208, 194],
       "accounts": [
         {
           "name": "admin",
@@ -264,29 +194,27 @@
           "signer": true
         },
         {
-          "name": "multisig",
-          "writable": true,
+          "name": "perpetuals",
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [109, 117, 108, 116, 105, 115, 105, 103]
+                "value": [112, 101, 114, 112, 101, 116, 117, 97, 108, 115]
               }
             ]
           }
         },
         {
-          "name": "pool",
-          "writable": true
-        },
-        {
-          "name": "custody",
+          "name": "custody_token_account",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
+                "value": [
+                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
+                  111, 117, 110, 116
+                ]
               },
               {
                 "kind": "account",
@@ -295,6 +223,23 @@
               {
                 "kind": "account",
                 "path": "custody_token_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool"
+        },
+        {
+          "name": "transfer_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116, 114, 97, 110, 115, 102, 101, 114, 95, 97, 117, 116, 104, 111, 114, 105, 116,
+                  121
+                ]
               }
             ]
           }
@@ -315,17 +260,7 @@
           "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": {
-              "name": "AddCustodyInitParams"
-            }
-          }
-        }
-      ],
-      "returns": "u8"
+      "args": []
     },
     {
       "name": "add_liquidity",
@@ -372,41 +307,11 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody_oracle_account"
@@ -417,27 +322,7 @@
         },
         {
           "name": "custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "lp_token_mint",
@@ -616,20 +501,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "position",
@@ -659,27 +531,7 @@
         },
         {
           "name": "collateral_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -713,40 +565,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -803,20 +625,7 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         }
       ],
       "args": [
@@ -847,40 +656,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -890,24 +669,7 @@
           "optional": true
         },
         {
-          "name": "collateral_custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "collateral_custody"
         },
         {
           "name": "collateral_custody_oracle_account"
@@ -949,43 +711,13 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
           "name": "position"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -995,24 +727,7 @@
           "optional": true
         },
         {
-          "name": "collateral_custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "collateral_custody"
         },
         {
           "name": "collateral_custody_oracle_account"
@@ -1054,43 +769,13 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
           "name": "position"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -1138,43 +823,13 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
           "name": "position"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -1222,20 +877,7 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
           "name": "lp_token_mint",
@@ -1281,40 +923,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -1352,43 +964,13 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
           "name": "position"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -1440,40 +1022,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "custody_oracle_account"
@@ -1530,40 +1082,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "receiving_custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "receiving_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "receiving_custody"
         },
         {
           "name": "receiving_custody_oracle_account"
@@ -1573,24 +1095,7 @@
           "optional": true
         },
         {
-          "name": "dispensing_custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "dispensing_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "dispensing_custody"
         },
         {
           "name": "dispensing_custody_oracle_account"
@@ -1669,7 +1174,7 @@
         },
         {
           "name": "perpetuals_program",
-          "address": "BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX"
+          "address": "6RfdxdBjsqLmgBtJizGSAu4NyXTctDGPRYJB8YmeqGio"
         },
         {
           "name": "system_program",
@@ -1735,20 +1240,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "position",
@@ -1778,27 +1270,7 @@
         },
         {
           "name": "collateral_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -1857,20 +1329,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "position",
@@ -1878,24 +1337,7 @@
         },
         {
           "name": "custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody_oracle_account"
@@ -1906,24 +1348,7 @@
         },
         {
           "name": "collateral_custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "collateral_custody_oracle_account"
@@ -1934,27 +1359,7 @@
         },
         {
           "name": "collateral_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "system_program",
@@ -2017,20 +1422,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "position",
@@ -2060,27 +1452,7 @@
         },
         {
           "name": "collateral_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "collateral_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -2147,65 +1519,15 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "system_program",
@@ -2273,41 +1595,11 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody_oracle_account"
@@ -2318,27 +1610,7 @@
         },
         {
           "name": "custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "lp_token_mint",
@@ -2422,20 +1694,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "system_program",
@@ -2509,41 +1768,11 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         }
       ],
       "args": [
@@ -2591,40 +1820,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "oracle_account",
@@ -2680,40 +1879,10 @@
           }
         },
         {
-          "name": "pool",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "name": "pool"
         },
         {
-          "name": "custody",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "name": "custody"
         },
         {
           "name": "oracle_account",
@@ -2886,41 +2055,11 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "receiving_custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "receiving_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "receiving_custody_oracle_account"
@@ -2931,48 +2070,11 @@
         },
         {
           "name": "receiving_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "receiving_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "dispensing_custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "dispensing_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "dispensing_custody_oracle_account"
@@ -2983,27 +2085,7 @@
         },
         {
           "name": "dispensing_custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "dispensing_custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "token_program",
@@ -3043,20 +2125,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         }
       ],
       "args": [],
@@ -3085,20 +2154,7 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody",
@@ -3168,65 +2224,15 @@
         },
         {
           "name": "pool",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [112, 111, 111, 108]
-              },
-              {
-                "kind": "account",
-                "path": "pool.name",
-                "account": "Pool"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [99, 117, 115, 116, 111, 100, 121]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "custody_token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 117, 115, 116, 111, 100, 121, 95, 116, 111, 107, 101, 110, 95, 97, 99, 99,
-                  111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "pool"
-              },
-              {
-                "kind": "account",
-                "path": "custody.mint",
-                "account": "Custody"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "receiving_token_account",
@@ -3357,13 +2363,6 @@
             "type": "u64"
           }
         ]
-      }
-    },
-    {
-      "name": "AddCustodyInitParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
       }
     },
     {
@@ -3683,10 +2682,6 @@
           },
           {
             "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "token_account_bump",
             "type": "u8"
           }
         ]

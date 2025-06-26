@@ -22,9 +22,9 @@ pub struct GetLpTokenPrice<'info> {
     pub perpetuals: Box<Account<'info, Perpetuals>>,
 
     #[account(
-        seeds = [b"pool",
-                 pool.name.as_bytes()],
-        bump = pool.bump
+        // seeds = [b"pool",
+        //          pool.name.as_bytes()],
+        // bump = pool.bump
     )]
     pub pool: Box<Account<'info, Pool>>,
 

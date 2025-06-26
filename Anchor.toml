@@ -2,17 +2,17 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-perpetuals = "BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX"
+perpetuals = "FUAaX8Ym86imdLvkwLjGLCGWNtFAJ6eoTtQkGwTAstF6"
 [programs.devnet]
-perpetuals = "BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX"
+perpetuals = "FUAaX8Ym86imdLvkwLjGLCGWNtFAJ6eoTtQkGwTAstF6"
 [programs.testnet]
-perpetuals = "BCszwEzJUvTXCKyr7ko34z6TXWv4d8Wp9gEdFcHJpfX"
+perpetuals = "FUAaX8Ym86imdLvkwLjGLCGWNtFAJ6eoTtQkGwTAstF6"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "https://testnet.dev2.eclipsenetwork.xyz"
+cluster = "https://api.devnet.solana.com"
 wallet = "/Users/macbookpro/rust/perpetuals/keys/keypair.json"
 
 [scripts]

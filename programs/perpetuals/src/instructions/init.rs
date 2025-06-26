@@ -3,6 +3,7 @@
 use {
     crate::{
         error::PerpetualsError,
+        program::Perpetuals as PerpetualsProgram,
         state::{multisig::Multisig, perpetuals::Perpetuals},
     },
     anchor_lang::prelude::*,
@@ -46,7 +47,7 @@ pub struct Init<'info> {
     #[account()]
     pub perpetuals_program_data: AccountInfo<'info /*, ProgramData*/>,
 
-    pub perpetuals_program: Program<'info, crate::program::Perpetuals>,
+    pub perpetuals_program: Program<'info, PerpetualsProgram>,
 
     system_program: Program<'info, System>,
     token_program: Program<'info, Token>,
